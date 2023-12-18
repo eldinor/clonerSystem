@@ -1,6 +1,6 @@
 # clonerSystem
 
-Cloner System for Babylon.js
+## Cloner System for Babylon.js
 
 Based on Cloner System extension https://github.com/BabylonJS/Extensions/tree/master/ClonerSystem by https://github.com/androdlang
 
@@ -27,6 +27,31 @@ Definitions:
 		RandomEffector: influences Scale/Position/Rotation of a clone with repeatable random values, controlled with an overall "strength" parameter. Not quite finished, but basically working.
 	</li>
 </ul>
+
+## Demo
+
+The demo with all cloners - https://babylonpress.org/cloner/
+
+## Import and Usage
+
+Import is done through src/clonersystem/index.ts.
+You may import the whole ClonerSystem and then use like ClonerSystem.MatrixCloner etc.
+Or, for better tree shaking, import them like <br><pre>import { RandomEffector } from "../clonersystem";<br>import { MatrixCloner } from "../clonersystem"</pre>
+
+Then use like
+
+<pre>
+
+        const mc = new MatrixCloner([capsule, box, sphere], scene, {
+            mcount: { x: 5, y: 5, z: 5 },
+        });
+
+        mc.root!.position = new Vector3(-10, 0, 15);
+		const rr = new RandomEffector();
+        rr.strength = 1;
+        rr.position = { x: 2, y: 0, z: 2 };
+        rr.rotation = { x: 70, y: 30, z: 0 };
+        mc.addEffector(rr, 1);</pre>
 
 ## Getting started
 

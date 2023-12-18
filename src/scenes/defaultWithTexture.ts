@@ -133,7 +133,7 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
         capsule.material = new StandardMaterial("capsule material", scene);
         (capsule.material as StandardMaterial).diffuseColor = Color3.Red();
 
-        var rr = new RandomEffector();
+        const rr = new RandomEffector();
         rr.strength = 1;
         rr.position = { x: 2, y: 0, z: 2 };
         rr.rotation = { x: 70, y: 30, z: 0 };
@@ -173,9 +173,8 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
         oc.addEffector(reff, 1);
         oc.addEffector(rr, 1);
 
-        var mc = new MatrixCloner([capsule, box, sphere], scene, {
+        const mc = new MatrixCloner([capsule, box, sphere], scene, {
             mcount: { x: 5, y: 5, z: 5 },
-            useInstances: true,
         });
 
         mc.root!.position = new Vector3(-10, 0, 15);
