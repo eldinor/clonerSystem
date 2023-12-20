@@ -151,23 +151,23 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
 
         const lc = new LinearCloner([box, sphere, capsule] as any, scene, {
             iModeRelative: true,
-            //@ts-ignore
+
             count: 30,
             P: { x: 2, y: 0, z: -1 },
         });
 
         lc.addEffector(rr, 1);
 
-        var box1 = CreateBox("box1", { width: 0.3, depth: 0.1, height: 0.2 });
+        const box1 = CreateBox("box1", { width: 0.3, depth: 0.1, height: 0.2 });
         box1.material = new StandardMaterial("box1 material", scene);
         (box1.material as StandardMaterial).diffuseColor = Color3.Yellow();
 
         const oc = new ObjectCloner([box1], ico, scene, {});
         //  oc.addEffector(rr, 3);
 
-        var reff = new RandomEffector();
-        //@ts-ignore
-        reff.position = { x: 2, y: 2, z: 2, u: true };
+        const reff = new RandomEffector();
+
+        reff.position = { x: 2, y: 2, z: 2 };
         reff.strength = 3;
 
         oc.addEffector(reff, 1);

@@ -35,7 +35,7 @@ export class RadialCloner extends Cloner {
             endangle = 360,
             useInstances = true,
             plane = { x: 1, y: 0, z: 1 },
-            colorize = null,
+            // colorize = null,
         } = {}
     ) {
         super();
@@ -80,7 +80,7 @@ export class RadialCloner extends Cloner {
         this.update();
     }
     createClone(parent: any, dummyUseInstances = null, dummyName = null) {
-        var c = new RadialCloner(this._mesh, this._scene, {
+        const c = new RadialCloner(this._mesh, this._scene, {
             count: this._count,
             offset: this._offset,
             radius: this._radius,
@@ -97,7 +97,7 @@ export class RadialCloner extends Cloner {
     createClones(start = 0) {
         for (let i = start; i < this._count!; i++) {
             //create Node for each clone, RADIAL=>parent = rootnode
-            var n = new CMesh(
+            const n = new CMesh(
                 `n_rc${this._instance_nr}_${i}`,
                 this._scene,
                 this._rootNode
@@ -105,8 +105,8 @@ export class RadialCloner extends Cloner {
             n._index = i;
             this._clones.push(n);
             //create clone
-            let cix = i % this._mesh.length;
-            let c = n.createClone(
+            const cix = i % this._mesh.length;
+            const c = n.createClone(
                 this._mesh[cix],
                 this._useInstances,
                 `${this._mesh[cix].name}_rc${this._instance_nr}_${i}`
@@ -130,8 +130,8 @@ export class RadialCloner extends Cloner {
     }
     calcRot() {
         for (let i = 0; i < this._count!; i++) {
-            let arange = this._endangle - this._startangle;
-            let step = arange / this._count!;
+            const arange = this._endangle - this._startangle;
+            const step = arange / this._count!;
             this._clones[i].getChildren()[0].rotation.x =
                 this._clones[i].getChildren()[0].rotation.y =
                 this._clones[i].getChildren()[0].rotation.z =
@@ -150,7 +150,9 @@ export class RadialCloner extends Cloner {
                     : 0;
             }
 
-            let vRet = this.eRotate(this._clones[i].getChildren()[0].rotation);
+            const vRet = this.eRotate(
+                this._clones[i].getChildren()[0].rotation
+            );
             this._clones[i].getChildren()[0].rotation = vRet;
         }
     }
@@ -163,8 +165,8 @@ export class RadialCloner extends Cloner {
     calcPos() {
         this.eReset();
         for (let i = 0; i < this._count!; i++) {
-            let arange = this._endangle - this._startangle;
-            let step = arange / this._count!;
+            const arange = this._endangle - this._startangle;
+            const step = arange / this._count!;
             this._clones[i].position.x =
                 this._clones[i].position.y =
                 this._clones[i].position.z =
@@ -220,12 +222,12 @@ export class RadialCloner extends Cloner {
         this._rootNode!.dispose();
     }
     recalc() {
-        var cnt = this._count;
+        const cnt = this._count;
         this.count = 0;
         this.count = cnt;
     }
     set count(scnt) {
-        let cnt = Number(scnt);
+        const cnt = Number(scnt);
         if (cnt < Number(this._count)) {
             for (let i = this._count! - 1; i >= cnt; i--) {
                 this._clones[i].delete();
@@ -233,7 +235,7 @@ export class RadialCloner extends Cloner {
             this._count = cnt;
             this._clones.length = cnt;
         } else if (cnt > Number(this._count)) {
-            var start = this._count;
+            const start = this._count;
             this._count = cnt;
             this.createClones(start);
         }

@@ -4,7 +4,8 @@ import { InstancedMesh, Mesh } from "@babylonjs/core/Meshes/";
 
 export class CMesh extends Mesh {
     private _cloner: Cloner | null = null;
-    _index: number = 0;
+    public _index = 0;
+
     constructor(
         name: string,
         scene: Scene,
@@ -55,17 +56,27 @@ export class Cloner {
     _index!: number;
 
     _count: number | undefined;
-    _effectors: any = [];
+    _effectors: Array<any> = [];
 
     delete() {
         throw new Error("Method not implemented.");
     }
+
     setEnabled(enabled: boolean) {
-        (this._rootNode as any).setEnabled(enabled);
+        if (this._rootNode !== null) {
+            this._rootNode.setEnabled(enabled);
+        }
     }
-    createClone(parent: Mesh) {}
-    update() {}
-    addEffector(effector: any, sensitivity: any) {
+
+    createClone(parent: Mesh) {
+        throw new Error("Method not implemented.");
+    }
+
+    update() {
+        throw new Error("Method not implemented.");
+    }
+
+    addEffector(effector: RandomEffector, sensitivity: number) {
         this._effectors.push({
             effector: effector,
             sensitivity: sensitivity,
@@ -73,11 +84,13 @@ export class Cloner {
         effector.addClient(this);
         this.update();
     }
+
     get effectors() {
         return this._effectors;
     }
+
     eScale(vec: Vector3): Vector3 {
-        var vRet = Cloner.vZero.add(vec);
+        let vRet = Cloner.vZero.add(vec);
         for (let i = 0; i < this._effectors.length; i++) {
             vRet = Vector3.Lerp(
                 vec,
@@ -88,7 +101,7 @@ export class Cloner {
         return vRet;
     }
     eRotate(vec: Vector3): Vector3 {
-        var vRet = Cloner.vZero.add(vec);
+        let vRet = Cloner.vZero.add(vec);
         for (let i = 0; i < this._effectors.length; i++) {
             vRet = Vector3.Lerp(
                 vec,
@@ -125,12 +138,12 @@ export class RandomEffector {
     private _seed: number;
     private _s: number;
     private _rfunction;
-    private _strength: number = 0.0;
+    private _strength = 0.0;
     private _position: Vector3 = new Vector3(0, 0, 0);
     private _rotation: Vector3 = new Vector3(0, 0, 0);
     private _scale: Vector3 = new Vector3(0, 0, 0);
     private _uniformScale = false;
-    private _clients = [];
+    private _clients: Array<any> = [];
     constructor(seed = 42) {
         this._seed = this._s = seed;
         this._rfunction = () => {
@@ -145,7 +158,7 @@ export class RandomEffector {
         this._s = this._seed;
     }
     updateRotation(vec: Vector3) {
-        var m1 = this._rotation.multiplyByFloats(
+        const m1 = this._rotation.multiplyByFloats(
             (-0.5 + this.random()) * this._strength,
             (-0.5 + this.random()) * this._strength,
             (-0.5 + this.random()) * this._strength
@@ -153,7 +166,7 @@ export class RandomEffector {
         return vec.add(m1);
     }
     updatePosition(vec: Vector3) {
-        var m1 = this._position.multiplyByFloats(
+        const m1 = this._position.multiplyByFloats(
             (-0.5 + this.random()) * this._strength,
             (-0.5 + this.random()) * this._strength,
             (-0.5 + this.random()) * this._strength
@@ -161,14 +174,14 @@ export class RandomEffector {
         return vec.add(m1);
     }
     updateScale(vec: Vector3) {
-        let a = this.random();
+        const a = this.random();
         let b = a;
         let c = a;
         if (this._uniformScale == false) {
             b = this.random();
             c = this.random();
         }
-        var m1 = this._scale.multiplyByFloats(
+        const m1 = this._scale.multiplyByFloats(
             (-0.5 + a) * this._strength,
             (-0.5 + b) * this._strength,
             (-0.5 + b) * this._strength
@@ -177,11 +190,11 @@ export class RandomEffector {
         return vec.add(m1);
     }
     addClient(c: any) {
-        (this._clients as any).push(c);
+        this._clients.push(c);
     }
     updateClients() {
-        this._clients.forEach(function (c) {
-            (c as any).update();
+        this._clients.forEach(function (c: any) {
+            c.update();
         });
         return this;
     }
@@ -200,7 +213,7 @@ export class RandomEffector {
         this._position.y = p.y;
         this._position.z = p.z;
     }
-    get position() {
+    get position(): Vector3 {
         return this._position;
     }
     set scale(s: { x: number; y: number; z: number }) {
@@ -210,7 +223,7 @@ export class RandomEffector {
             this._scale.z = s.z;
         }
     }
-    get scale() {
+    get scale(): Vector3 {
         return this._scale;
     }
     set rotation(s: { x: number; y: number; z: number }) {
@@ -218,7 +231,7 @@ export class RandomEffector {
         this._rotation.y = (s.y * Math.PI) / 180;
         this._rotation.z = (s.z * Math.PI) / 180;
     }
-    get rotation() {
+    get rotation(): Vector3 {
         return this._rotation;
     }
     rot(s: { x: number; y: number; z: number }) {
@@ -233,22 +246,23 @@ export class RandomEffector {
     set seed(s: number) {
         this._seed = this._s = s;
     }
-    get seed() {
+    get seed(): number {
         return this._seed;
     }
-    set uniformScale(flag) {
+    set uniformScale(flag: boolean) {
         this._uniformScale = flag;
     }
-    get uniformScale() {
+    get uniformScale(): boolean {
         return this._uniformScale;
     }
-    getRandomColor() {
+    getRandomColor(): number {
         return this.random();
     }
-    getRandomInt({ min = 0, max = 10 } = {}) {
+    getRandomInt({ min = 0, max = 10 } = {}): number {
         return min + Math.floor(this.random() * (max - min));
     }
 }
+
 export class RandomNumberGen {
     private _min;
     private _max;
@@ -259,11 +273,10 @@ export class RandomNumberGen {
         this._generator = new RandomEffector(seed);
         return this;
     }
-    nextInt() {
+    nextInt(): number {
         return this._generator.getRandomInt({
             min: this._min,
             max: this._max,
         });
     }
 }
-//

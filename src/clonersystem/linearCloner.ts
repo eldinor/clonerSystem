@@ -13,13 +13,13 @@ export class LinearCloner extends Cloner {
     private _iModeRelative: boolean;
     private _growth: number;
     private _instance_nr: number;
-    private _countNumberGen = null;
+    private _countNumberGen: number | null = null;
 
     constructor(
         mesh: Array<Mesh>,
         scene: Scene,
         {
-            count = null,
+            count = 0,
             offset = 0,
             growth = 1,
             useInstances = true,
@@ -32,7 +32,7 @@ export class LinearCloner extends Cloner {
         super();
         LinearCloner.instance_nr = 0 | (LinearCloner.instance_nr + 1);
         this._mesh = mesh;
-        this._mesh.forEach(function (m) {
+        this._mesh.forEach(function (m: Mesh) {
             m.setEnabled(false);
         });
         this._scene = scene;
@@ -65,11 +65,11 @@ export class LinearCloner extends Cloner {
         this.update();
     }
     createClone(parent: any, dummyUseInstances = null, dummyName = null) {
-        let cnt =
+        const cnt =
             this._countNumberGen != null
                 ? (this._countNumberGen as any).nextInt()
                 : this._count;
-        var c = new LinearCloner(this._mesh, this._scene, {
+        const c = new LinearCloner(this._mesh, this._scene, {
             count: cnt,
             offset: this._offset,
             growth: this._growth,
@@ -80,13 +80,15 @@ export class LinearCloner extends Cloner {
             iModeRelative: this._iModeRelative,
         });
         parent._cloner = c;
-        c.root!.parent = parent;
+        if (c.root) {
+            c.root.parent = parent;
+        }
         return c.root;
     }
     createClones(start = 0) {
         for (let i = start; i < this._count!; i++) {
             //create Node for each clone, RADIAL=>parent = rootnode
-            var n = new CMesh(
+            const n = new CMesh(
                 `n_lc${this._instance_nr}_${i}`,
                 this._scene,
                 this._rootNode
@@ -94,8 +96,8 @@ export class LinearCloner extends Cloner {
             //n.index = i;
             this._clones.push(n);
             //create clone
-            let cix = i % this._mesh.length;
-            let c = n.createClone(
+            const cix = i % this._mesh.length;
+            const c = n.createClone(
                 this._mesh[cix],
                 this._useInstances,
                 `${this._mesh[cix].name}_lc${this._instance_nr}_${i}`
@@ -103,7 +105,7 @@ export class LinearCloner extends Cloner {
             //c.material.diffuseColor.g = 1-i / this._count;
         }
     }
-
+    /*
     createClones2(start = 0) {
         var cix = 0;
         for (let i = start; i < this._count!; i++) {
@@ -121,9 +123,10 @@ export class LinearCloner extends Cloner {
             );
         }
     }
+    */
     calcSize() {
         for (let i = 1; i < this._count!; i++) {
-            var orig = Vector3.Lerp(
+            const orig = Vector3.Lerp(
                 Cloner.vOne,
                 this._S,
                 this._iModeRelative ? i : i / (this._count! - 1)
@@ -136,13 +139,13 @@ export class LinearCloner extends Cloner {
         this.eReset();
         let f = this._growth;
         if (this._iModeRelative == false) {
-            var tcm1 = this._count! == 1 ? 1 : this._count! - 1;
+            const tcm1 = this._count! == 1 ? 1 : this._count! - 1;
             f = (1 / tcm1) * this._growth;
         }
         for (let i = 0; i < this._count!; i++) {
-            let off = Vector3.Lerp(Cloner.vZero, this._P, f * this._offset);
-            let v = Vector3.Lerp(Cloner.vZero, this._P, i * f);
-            let v2 = v.add(off);
+            const off = Vector3.Lerp(Cloner.vZero, this._P, f * this._offset);
+            const v = Vector3.Lerp(Cloner.vZero, this._P, i * f);
+            const v2 = v.add(off);
             this._clones[i].position = this.ePosition(v2);
         }
     }
@@ -150,7 +153,7 @@ export class LinearCloner extends Cloner {
         this.eReset();
         let f = this._growth;
         if (this._iModeRelative == false) {
-            var tcm1 = this._count! == 1 ? 1 : this._count! - 1;
+            const tcm1 = this._count! == 1 ? 1 : this._count! - 1;
             f = (1 / tcm1) * this._growth;
         }
         //shift offset
@@ -161,7 +164,7 @@ export class LinearCloner extends Cloner {
         );
         this._clones[0].position = this.ePosition(this._clones[0].position);
         for (let i = 1; i < this._count!; i++) {
-            let v = Vector3.Lerp(Cloner.vZero, this._P, f);
+            const v = Vector3.Lerp(Cloner.vZero, this._P, f);
             this._clones[i].position = v;
             this._clones[i].getChildren()[0].position = this.ePosition(
                 Cloner.vZero
@@ -170,10 +173,12 @@ export class LinearCloner extends Cloner {
     }
     calcRot() {
         for (let i = 1; i < this._count!; i++) {
-            let item = this._clones[i].getChildren()[0];
+            //
+            //   const item = this._clones[i].getChildren()[0];
+            //
             //this._clones[i].getChildren()[0].rotation = Vector3.Lerp(Cloner.vZero, this._R, this._iModeRelative ? i * this._growth : i / (this._count! - 1) * this._growth);
             //this._clones[i].getChildren()[0].rotation = this.eRotate(Cloner.vZero);//   this._clones[i].rotation);
-            let vRot = Vector3.Lerp(
+            const vRot = Vector3.Lerp(
                 Cloner.vZero,
                 this._R,
                 this._iModeRelative
@@ -207,7 +212,7 @@ export class LinearCloner extends Cloner {
         }
     }
     recalc() {
-        var cnt = this._count;
+        const cnt = this._count;
         this.count = 0;
         this.count = cnt;
     }
@@ -227,7 +232,7 @@ export class LinearCloner extends Cloner {
         this._rootNode!.dispose();
     }
     set count(scnt) {
-        let cnt = Number(scnt);
+        const cnt = Number(scnt);
 
         if (cnt < Number(this._count)) {
             for (let i = this._count! - 1; i >= cnt; i--) {
@@ -236,7 +241,7 @@ export class LinearCloner extends Cloner {
             this._count! = cnt;
             this._clones.length = cnt;
         } else if (cnt > Number(this._count)) {
-            var start = this._count;
+            const start = this._count;
             this._count = cnt;
             this.createClones(start);
         }
@@ -255,7 +260,7 @@ export class LinearCloner extends Cloner {
     }
 
     set iModeRel(mode: any) {
-        let newMode = mode;
+        const newMode = mode;
         let f = this._count! - 1;
         if (newMode && this._iModeRelative == false) {
             f = 1 / f;
@@ -308,7 +313,7 @@ export class LinearCloner extends Cloner {
         this._R.z = vec.z;
         this.update();
     }
-    set offset(o) {
+    set offset(o: number) {
         this._offset = o;
         this.update();
     }

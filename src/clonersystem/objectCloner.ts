@@ -5,7 +5,7 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 
 export class ObjectCloner extends Cloner {
     static instance_nr: number;
-    private _useInstances: boolean = true;
+    private _useInstances = true;
     private _template;
     private _instance_nr;
     private _positions;
@@ -40,11 +40,11 @@ export class ObjectCloner extends Cloner {
         this.calcPos();
     }
     createClones(start = 0) {
-        var cix = 0;
+        let cix = 0;
         this._count = this._positions.length;
         for (let i = 0; i < this._positions.length; i++) {
             cix = i % this._mesh.length;
-            var n = new CMesh(
+            const n = new CMesh(
                 `n_lc${ObjectCloner.instance_nr}_${i}`,
                 this._scene,
                 this._rootNode
@@ -59,7 +59,7 @@ export class ObjectCloner extends Cloner {
     }
     calcRot() {
         for (let i = 0; i < this._count!; i++) {
-            let vRet = this.eRotate(Cloner.vZero);
+            const vRet = this.eRotate(Cloner.vZero);
             this._clones[i].getChildren()[0].rotation = vRet;
         }
     }
