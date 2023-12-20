@@ -1,7 +1,6 @@
-import { Cloner, CMesh, RandomNumberGen } from "./core";
+import { Cloner, CMesh } from "./core";
 import { Scene } from "@babylonjs/core/scene";
 import { Mesh } from "@babylonjs/core/Meshes/";
-import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 
 export class ObjectCloner extends Cloner {
     static instance_nr: number;

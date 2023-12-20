@@ -139,7 +139,7 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
         rr.rotation = { x: 70, y: 30, z: 0 };
 
         const rc = new ClonerSystem.RadialCloner(
-            [sphere, box, capsule] as any,
+            [sphere, box, capsule],
             scene,
             {
                 count: 24,
@@ -149,7 +149,7 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
 
         rc.addEffector(rr, 1);
 
-        const lc = new LinearCloner([box, sphere, capsule] as any, scene, {
+        const lc = new LinearCloner([box, sphere, capsule], scene, {
             iModeRelative: true,
 
             count: 30,
@@ -174,7 +174,7 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
         oc.addEffector(rr, 1);
 
         const mc = new MatrixCloner([capsule, box, sphere], scene, {
-            mcount: { x: 5, y: 5, z: 5 },
+            mcount: { x: 5, y: 5, z: 15 },
         });
 
         mc.root!.position = new Vector3(-10, 0, 15);

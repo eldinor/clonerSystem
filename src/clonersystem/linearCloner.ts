@@ -208,7 +208,7 @@ export class LinearCloner extends Cloner {
             this.calcRot();
             this.calcPos();
             this.calcSize();
-            this.calcColor();
+            //   this.calcColor();
         }
     }
     recalc() {

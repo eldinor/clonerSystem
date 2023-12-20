@@ -2,11 +2,17 @@ import { Cloner, CMesh } from "./core";
 import { Scene } from "@babylonjs/core/scene";
 import { Mesh } from "@babylonjs/core/Meshes/";
 
+interface ICSVector3 {
+    readonly x: number;
+    readonly y: number;
+    readonly z: number;
+}
+
 export class MatrixCloner extends Cloner {
     static instance_nr: number;
     private _useInstances: boolean;
-    private _size;
-    private _mcount;
+    private _size: ICSVector3;
+    private _mcount: ICSVector3;
     private _iModeRelative: boolean;
     private _instance_nr: number;
 
@@ -24,7 +30,7 @@ export class MatrixCloner extends Cloner {
 
         MatrixCloner.instance_nr = 0 | (MatrixCloner.instance_nr + 1);
         this._mesh = mesh;
-        this._mesh.forEach(function (m: any) {
+        this._mesh.forEach(function (m: Mesh) {
             m.setEnabled(false);
         });
 
@@ -56,7 +62,10 @@ export class MatrixCloner extends Cloner {
             size: this._size,
         });
         parent._cloner = c;
-        c.root!.parent = parent;
+        if (c.root) {
+            c.root.parent = parent;
+        }
+
         return c.root;
     }
 
