@@ -52,11 +52,7 @@ export class MatrixCloner extends Cloner {
         this.update();
     }
 
-    createClone(
-        parent: any,
-        dummyUseInstances = null,
-        dummyName = null
-    ): Mesh | null {
+    createClone(parent: any): Mesh | null {
         const c = new MatrixCloner(this._mesh, this._scene, {
             mcount: this._mcount,
             size: this._size,
@@ -146,7 +142,7 @@ export class MatrixCloner extends Cloner {
 
     calcPos(): void {
         this.eReset();
-        let cix = 0;
+        //  let cix = 0;
         for (let z = 0; z < this._mcount.z; z++) {
             for (let y = 0; y < this._mcount.y; y++) {
                 for (let x = 0; x < this._mcount.x; x++) {
@@ -154,7 +150,7 @@ export class MatrixCloner extends Cloner {
                         x +
                         this._mcount.x * y +
                         this._mcount.x * this._mcount.y * z;
-                    cix = xyz % this._mesh.length;
+                    //   cix = xyz % this._mesh.length;
                     const xo = (-this._size.x * (this._mcount.x - 1)) / 2;
                     const yo = (-this._size.y * (this._mcount.y - 1)) / 2;
                     const zo = (-this._size.z * (this._mcount.z - 1)) / 2;

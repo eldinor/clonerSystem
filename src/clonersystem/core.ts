@@ -67,8 +67,8 @@ export class Cloner {
             this._rootNode.setEnabled(enabled);
         }
     }
-
-    createClone(parent: Mesh) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    createClone(_parent: Mesh) {
         throw new Error("Method not implemented.");
     }
 
@@ -184,7 +184,7 @@ export class RandomEffector {
         const m1 = this._scale.multiplyByFloats(
             (-0.5 + a) * this._strength,
             (-0.5 + b) * this._strength,
-            (-0.5 + b) * this._strength
+            (-0.5 + c) * this._strength
         );
         //var m1=this._scale.multiplyByFloats(this._strength,this._strength,this._strength);
         return vec.add(m1);

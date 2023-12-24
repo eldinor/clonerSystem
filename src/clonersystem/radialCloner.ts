@@ -79,7 +79,7 @@ export class RadialCloner extends Cloner {
         this.createClones();
         this.update();
     }
-    createClone(parent: any, dummyUseInstances = null, dummyName = null) {
+    createClone(parent: any) {
         const c = new RadialCloner(this._mesh, this._scene, {
             count: this._count,
             offset: this._offset,
@@ -106,7 +106,7 @@ export class RadialCloner extends Cloner {
             this._clones.push(n);
             //create clone
             const cix = i % this._mesh.length;
-            const c = n.createClone(
+            n.createClone(
                 this._mesh[cix],
                 this._useInstances,
                 `${this._mesh[cix].name}_rc${this._instance_nr}_${i}`

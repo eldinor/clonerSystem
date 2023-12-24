@@ -38,7 +38,7 @@ export class ObjectCloner extends Cloner {
         this.createClones();
         this.calcPos();
     }
-    createClones(start = 0) {
+    createClones() {
         let cix = 0;
         this._count = this._positions.length;
         for (let i = 0; i < this._positions.length; i++) {

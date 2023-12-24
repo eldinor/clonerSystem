@@ -64,7 +64,7 @@ export class LinearCloner extends Cloner {
         this.createClones();
         this.update();
     }
-    createClone(parent: any, dummyUseInstances = null, dummyName = null) {
+    createClone(parent: any) {
         const cnt =
             this._countNumberGen != null
                 ? (this._countNumberGen as any).nextInt()
@@ -97,7 +97,7 @@ export class LinearCloner extends Cloner {
             this._clones.push(n);
             //create clone
             const cix = i % this._mesh.length;
-            const c = n.createClone(
+            n.createClone(
                 this._mesh[cix],
                 this._useInstances,
                 `${this._mesh[cix].name}_lc${this._instance_nr}_${i}`

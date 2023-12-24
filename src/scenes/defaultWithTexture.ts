@@ -22,7 +22,12 @@ import "@babylonjs/core/Culling/ray";
 import { CreateBox } from "@babylonjs/core/Meshes/Builders/boxBuilder";
 import { CreateCapsule } from "@babylonjs/core/Meshes/Builders/capsuleBuilder";
 
-import { Animation, CreateIcoSphere, MeshBuilder } from "@babylonjs/core/";
+import {
+    Animation,
+    CreateIcoSphere,
+    InstancedMesh,
+    MeshBuilder,
+} from "@babylonjs/core/";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
 
 import { RandomEffector } from "../clonersystem";
@@ -32,6 +37,7 @@ import { LinearCloner } from "../clonersystem";
 import { ObjectCloner } from "../clonersystem";
 
 import { ClonerSystem } from "../clonersystem";
+import { VertexBuffer } from "@babylonjs/core/Buffers/buffer";
 
 export class DefaultSceneWithTexture implements CreateSceneClass {
     createScene = async (
@@ -173,13 +179,61 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
         oc.addEffector(reff, 1);
         oc.addEffector(rr, 1);
 
-        const mc = new MatrixCloner([capsule, box, sphere], scene, {
+        const box2 = CreateBox("box2", { width: 2, depth: 1, height: 0.5 });
+
+        const mc = new MatrixCloner([capsule, box2, sphere], scene, {
             mcount: { x: 5, y: 5, z: 15 },
         });
 
         mc.root!.position = new Vector3(-10, 0, 15);
         mc.addEffector(rr, 1);
 
+        console.log(mc.root!.getChildren());
+
+        //  let instanceCount = mc.root?.getChildren().length;
+        /*
+        mc.root?.getChildMeshes().forEach((m) => {
+            console.log(m.getClassName());
+        });
+
+        let inst = mc.root
+            ?.getChildMeshes()
+            .filter((m) => m.getClassName().includes("Instanced"));
+        console.log(inst);
+
+        let instBox = inst!.filter((m) => m.name.includes("box"));
+        console.log(instBox);
+
+        let instanceCount = instBox.length;
+        let colorData = new Float32Array(4 * instanceCount!);
+
+        for (let index = 0; index < instanceCount!; index++) {
+            colorData[index * 4] = Math.random();
+            colorData[index * 4 + 1] = Math.random();
+            colorData[index * 4 + 2] = Math.random();
+            colorData[index * 4 + 3] = 1.0;
+        }
+
+        const buffer = new VertexBuffer(
+            engine,
+            colorData,
+            VertexBuffer.ColorKind,
+            false,
+            false,
+            4,
+            true
+        );
+
+        box2.material = new StandardMaterial("material");
+        (box2.material as StandardMaterial).disableLighting = true;
+        (box2.material as StandardMaterial).emissiveColor = Color3.White();
+        box2.setVerticesBuffer(buffer);
+        box2.alwaysSelectAsActiveMesh = true;
+
+        mc.root?.getChildren().forEach((m) => {
+            (m as any).alwaysSelectAsActiveMesh = true;
+        });
+*/
         //#######################################################################33
         /*
         var mc = new MatrixCloner([capsule, box, sphere], scene, {
