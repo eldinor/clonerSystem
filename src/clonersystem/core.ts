@@ -144,9 +144,9 @@ export class RandomEffector {
     private _s: number;
     private _rfunction;
     private _strength = 0.0;
-    private _position: Vector3 = new Vector3(0, 0, 0);
-    private _rotation: Vector3 = new Vector3(0, 0, 0);
-    private _scale: Vector3 = new Vector3(0, 0, 0);
+    private _position: Vector3 = Vector3.Zero();
+    private _rotation: Vector3 = Vector3.Zero();
+    private _scale: Vector3 = Vector3.Zero();
     private _uniformScale = false;
     private _clients: Array<Cloner> = [];
     constructor(seed = 42) {
@@ -283,5 +283,16 @@ export class RandomNumberGen {
             min: this._min,
             max: this._max,
         });
+    }
+}
+
+export class toThin {
+    cloner: Cloner;
+    constructor(cloner: Cloner) {
+        this.cloner = cloner;
+
+        console.log(this.cloner);
+        console.log(this.cloner._clones);
+        console.log(this.cloner._rootNode);
     }
 }
