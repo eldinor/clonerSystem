@@ -64,7 +64,7 @@ export class LinearCloner extends Cloner {
         this.createClones();
         this.update();
     }
-    createClone(parent: any) {
+    createClone(parent: CMesh) {
         const cnt =
             this._countNumberGen != null
                 ? (this._countNumberGen as any).nextInt()
@@ -83,6 +83,7 @@ export class LinearCloner extends Cloner {
         if (c.root) {
             c.root.parent = parent;
         }
+
         return c.root;
     }
     createClones(start = 0) {
@@ -131,7 +132,8 @@ export class LinearCloner extends Cloner {
                 this._S,
                 this._iModeRelative ? i : i / (this._count! - 1)
             );
-            this._clones[i].getChildren()[0].scaling = this.eScale(orig);
+            (this._clones[i].getChildren()[0] as Mesh).scaling =
+                this.eScale(orig);
             //this._clones[i].scaling = this.eScale(orig);
         }
     }
@@ -166,9 +168,8 @@ export class LinearCloner extends Cloner {
         for (let i = 1; i < this._count!; i++) {
             const v = Vector3.Lerp(Cloner.vZero, this._P, f);
             this._clones[i].position = v;
-            this._clones[i].getChildren()[0].position = this.ePosition(
-                Cloner.vZero
-            );
+            (this._clones[i].getChildren()[0] as Mesh).position =
+                this.ePosition(Cloner.vZero);
         }
     }
     calcRot() {
@@ -185,7 +186,8 @@ export class LinearCloner extends Cloner {
                     ? i * this._growth
                     : (i / (this._count! - 1)) * this._growth
             );
-            this._clones[i].getChildren()[0].rotation = this.eRotate(vRot); //   this._clones[i].rotation);
+            (this._clones[i].getChildren()[0] as Mesh).rotation =
+                this.eRotate(vRot); //   this._clones[i].rotation);
         }
     }
     calcColor() {

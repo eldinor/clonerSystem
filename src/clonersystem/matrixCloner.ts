@@ -52,7 +52,7 @@ export class MatrixCloner extends Cloner {
         this.update();
     }
 
-    createClone(parent: any): Mesh | null {
+    createClone(parent: CMesh): Mesh | null {
         const c = new MatrixCloner(this._mesh, this._scene, {
             mcount: this._mcount,
             size: this._size,
@@ -130,13 +130,15 @@ export class MatrixCloner extends Cloner {
     calcRot(): void {
         for (let i = 0; i < this._count!; i++) {
             const vRet = this.eRotate(Cloner.vZero);
-            this._clones[i].getChildren()[0].rotation = vRet;
+            (this._clones[i].getChildren()[0] as Mesh).rotation = vRet;
         }
     }
 
     calcSize(): void {
         for (let i = 0; i < this._count!; i++) {
-            this._clones[i].getChildren()[0].scaling = this.eScale(Cloner.vOne);
+            (this._clones[i].getChildren()[0] as Mesh).scaling = this.eScale(
+                Cloner.vOne
+            );
         }
     }
 
@@ -157,7 +159,7 @@ export class MatrixCloner extends Cloner {
                     this._clones[xyz].position.x = xo + x * this._size.x;
                     this._clones[xyz].position.y = yo + y * this._size.y;
                     this._clones[xyz].position.z = zo + z * this._size.z;
-                    this._clones[xyz].getChildren()[0].position =
+                    (this._clones[xyz].getChildren()[0] as Mesh).position =
                         this.ePosition(Cloner.vZero);
                 }
             }
@@ -173,7 +175,7 @@ export class MatrixCloner extends Cloner {
             this._clones[i].delete();
         }
         this._clones.length = 0;
-        (this._rootNode as any).dispose();
+        this._rootNode!.dispose();
     }
 
     update(): void {

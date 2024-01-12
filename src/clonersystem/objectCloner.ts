@@ -59,7 +59,7 @@ export class ObjectCloner extends Cloner {
     calcRot() {
         for (let i = 0; i < this._count!; i++) {
             const vRet = this.eRotate(Cloner.vZero);
-            this._clones[i].getChildren()[0].rotation = vRet;
+            (this._clones[i].getChildren()[0] as Mesh).rotation = vRet;
         }
     }
     calcSize() {

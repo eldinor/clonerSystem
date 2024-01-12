@@ -79,7 +79,7 @@ export class RadialCloner extends Cloner {
         this.createClones();
         this.update();
     }
-    createClone(parent: any) {
+    createClone(parent: CMesh) {
         const c = new RadialCloner(this._mesh, this._scene, {
             count: this._count,
             offset: this._offset,
@@ -132,34 +132,39 @@ export class RadialCloner extends Cloner {
         for (let i = 0; i < this._count!; i++) {
             const arange = this._endangle - this._startangle;
             const step = arange / this._count!;
-            this._clones[i].getChildren()[0].rotation.x =
-                this._clones[i].getChildren()[0].rotation.y =
-                this._clones[i].getChildren()[0].rotation.z =
+            (this._clones[i].getChildren()[0] as Mesh).rotation.x =
+                (this._clones[i].getChildren()[0] as Mesh).rotation.y =
+                (this._clones[i].getChildren()[0] as Mesh).rotation.z =
                     0;
             if (this._plane.y === 0) {
-                this._clones[i].getChildren()[0].rotation.y = this._align
+                (this._clones[i].getChildren()[0] as Mesh).rotation.y = this
+                    ._align
                     ? this._offset + this._startangle + i * step
                     : 0;
             } else if (this._plane.x === 0) {
-                this._clones[i].getChildren()[0].rotation.x = this._align
+                (this._clones[i].getChildren()[0] as Mesh).rotation.x = this
+                    ._align
                     ? -this._offset - this._startangle - i * step
                     : 0;
             } else {
-                this._clones[i].getChildren()[0].rotation.z = this._align
+                (this._clones[i].getChildren()[0] as Mesh).rotation.z = this
+                    ._align
                     ? -this._offset - this._startangle - i * step
                     : 0;
             }
 
             const vRet = this.eRotate(
-                this._clones[i].getChildren()[0].rotation
+                (this._clones[i].getChildren()[0] as Mesh).rotation
             );
-            this._clones[i].getChildren()[0].rotation = vRet;
+            (this._clones[i].getChildren()[0] as Mesh).rotation = vRet;
         }
     }
     calcSize() {
         for (let i = 0; i < this._count!; i++) {
             //var orig=Vector3.Lerp(Cloner.vOne, this._S, this._iModeRelative ? i : i / (this._count - 1));
-            this._clones[i].getChildren()[0].scaling = this.eScale(Cloner.vOne);
+            (this._clones[i].getChildren()[0] as Mesh).scaling = this.eScale(
+                Cloner.vOne
+            );
         }
     }
     calcPos() {

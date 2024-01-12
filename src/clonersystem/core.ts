@@ -3,7 +3,7 @@ import { Scene } from "@babylonjs/core/scene";
 import { InstancedMesh, Mesh } from "@babylonjs/core/Meshes/";
 
 export class CMesh extends Mesh {
-    private _cloner: Cloner | null = null;
+    public _cloner: Cloner | null = null;
     public _index = 0;
 
     constructor(
@@ -51,12 +51,12 @@ export class Cloner {
     _rootNode: Mesh | null = null;
     _mesh: Array<Mesh> = [];
     _scene!: Scene;
-    _clones!: Array<any>;
+    _clones!: Array<CMesh>;
     _frame!: number;
     _index!: number;
 
     _count: number | undefined;
-    _effectors: Array<any> = [];
+    _effectors: Array<IEffector> = [];
 
     delete() {
         throw new Error("Method not implemented.");
@@ -123,7 +123,7 @@ export class Cloner {
         return vRet; // Vector3.Lerp(vec,vRet,this._effectorStrength.x);
     }
     eReset() {
-        this._effectors.forEach(function (e: any) {
+        this._effectors.forEach(function (e: IEffector) {
             e.effector.reset();
         });
     }
@@ -134,6 +134,11 @@ export class Cloner {
 
 //
 
+interface IEffector {
+    effector: RandomEffector;
+    sensitivity: number;
+}
+
 export class RandomEffector {
     private _seed: number;
     private _s: number;
@@ -143,7 +148,7 @@ export class RandomEffector {
     private _rotation: Vector3 = new Vector3(0, 0, 0);
     private _scale: Vector3 = new Vector3(0, 0, 0);
     private _uniformScale = false;
-    private _clients: Array<any> = [];
+    private _clients: Array<Cloner> = [];
     constructor(seed = 42) {
         this._seed = this._s = seed;
         this._rfunction = () => {
@@ -189,11 +194,11 @@ export class RandomEffector {
         //var m1=this._scale.multiplyByFloats(this._strength,this._strength,this._strength);
         return vec.add(m1);
     }
-    addClient(c: any) {
+    addClient(c: Cloner) {
         this._clients.push(c);
     }
     updateClients() {
-        this._clients.forEach(function (c: any) {
+        this._clients.forEach(function (c: Cloner) {
             c.update();
         });
         return this;
