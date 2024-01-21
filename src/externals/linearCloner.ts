@@ -19,7 +19,7 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
  * @param offset The offset in world units in the direction of the transform position vector. Default 0.
  * @param growth The weight factor for all transform parameters in percent/100. Default 1.
  * @param P The position transform vector. Default { x: 0, y: 2, z: 0 }.
- *  @param S The scaling transform vector. Default 	{ x: 1, y: 1, z: 1}.
+ * @param S The scaling transform vector. Default 	{ x: 1, y: 1, z: 1}.
  * @param R The rotation transform vector. Default { x: 0, y: 0, z: 0 }.
  * @param iModeRelative The interpolation mode. Default false (absolute).
  * @param useInstances Flag if clones should be technical "clones" or "instances". Default true.
@@ -36,6 +36,7 @@ export class LinearCloner extends Cloner {
     private _growth: number;
     private _instance_nr: number;
     private _countNumberGen: number | null = null;
+    private isPickable: boolean;
 
     constructor(
         mesh: Array<Mesh>,
@@ -50,6 +51,7 @@ export class LinearCloner extends Cloner {
             S = { x: 1, y: 1, z: 1 },
             R = { x: 0, y: 0, z: 0 },
             iModeRelative = false,
+            isPickable = false,
         } = {}
     ) {
         super();
@@ -60,6 +62,7 @@ export class LinearCloner extends Cloner {
         });
         this._scene = scene;
         this._useInstances = useInstances;
+        this.isPickable = isPickable;
         this._clones = [];
         this._countNumberGen =
             (count as any) instanceof RandomNumberGen ? count : null;
@@ -123,7 +126,8 @@ export class LinearCloner extends Cloner {
             n.createClone(
                 this._mesh[cix],
                 this._useInstances,
-                `${this._mesh[cix].name}_lc${this._instance_nr}_${i}`
+                `${this._mesh[cix].name}_lc${this._instance_nr}_${i}`,
+                this.isPickable
             );
         }
     }
@@ -187,13 +191,18 @@ export class LinearCloner extends Cloner {
         this._growth = g;
         this.update();
     }
+    /**
+     * Deletes all Cloner's children and disposes the root Node.
+     */
     delete() {
         for (let i = this._count! - 1; i >= 0; i--) {
             this._clones[i].parent = null;
             this._clones[i].getChildren()[0].dispose();
             this._clones[i].dispose();
         }
-        this._rootNode!.dispose();
+        if (this._rootNode) {
+            this._rootNode.dispose();
+        }
     }
     set count(scnt) {
         const cnt = Number(scnt);

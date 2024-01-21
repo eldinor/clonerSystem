@@ -25,7 +25,12 @@ export class CMesh extends Mesh {
         this.parent = null;
         this.dispose();
     }
-    createClone(item: Cloner | Mesh, useInstances: boolean, name: string) {
+    createClone(
+        item: Cloner | Mesh,
+        useInstances: boolean,
+        name: string,
+        isPickable: boolean
+    ) {
         let c: Mesh | InstancedMesh | void;
         if (item instanceof Cloner) {
             c = item.createClone(this);
@@ -33,11 +38,13 @@ export class CMesh extends Mesh {
         } else {
             if (useInstances) {
                 c = item.createInstance(name + "_i");
+                c.isPickable = isPickable;
                 c.parent = this;
             } else {
                 c = item.clone(name + "_c");
                 c.setEnabled(true);
                 c.parent = this;
+                c.isPickable = this.isPickable;
             }
         }
 
@@ -58,9 +65,13 @@ export class Cloner {
     _count: number | undefined;
     _effectors: Array<IEffector> = [];
 
+    /**
+     * Deletes all Cloner's children and disposes the root Node.
+     */
     delete() {
         throw new Error("Method not implemented.");
     }
+
     /**
      * set the cloner's root node to the state of the flag (true=enabled)
      *
@@ -71,6 +82,7 @@ export class Cloner {
             this._rootNode.setEnabled(enabled);
         }
     }
+
     createClone(_parent: Mesh) {
         throw new Error("Method not implemented.");
     }
@@ -142,6 +154,7 @@ export class Cloner {
     /**
      * Converts the Cloner to thin instances, then deletes this Cloner and returns an array of Cloner meshes. The source meshes are cloned, their clones set enabled. To display them use addSelf = true.
      * All cloned source meshes get the new parent with the rootName.
+     * Be aware that the original Cloner will be disposed, so Cloner methods will not work anymore. Use the root node and its individual child meshes for further processing.
      *
      * @param addSelf If true, adds the source mesh to the matrix. Default false.
      * @param rootName Allow to define the name of the root mesh which will be the parent of cloned source meshes and all thin instances. If empty, Cloner class name will be used for the name.
@@ -151,16 +164,14 @@ export class Cloner {
         //  console.log("addSelf", addSelf);
 
         let scale, rot, pos;
-        let clonedMeshArray: Array<Mesh> = [];
-
-        console.log(this.constructor.name);
+        const clonedMeshArray: Array<Mesh> = [];
 
         rootName = rootName ? rootName : this.constructor.name;
 
         const thinRoot = new Mesh(rootName);
 
         this._mesh.forEach((element, index) => {
-            let cloned = element.clone(element.name + "_cl_" + index);
+            const cloned = element.clone(element.name + "_cl_" + index);
             cloned.setEnabled(true);
             cloned.makeGeometryUnique();
             cloned.setParent(thinRoot);
@@ -169,13 +180,12 @@ export class Cloner {
 
         this._clones.forEach((c, index) => {
             const inst = c.getChildren()[0] as InstancedMesh;
-            //     inst.sourceMesh.setEnabled(true);
 
             pos = c.position;
             rot = Quaternion.FromEulerVector(inst.rotation);
             scale = inst.scaling;
 
-            let meshIndex = index % this._mesh.length;
+            const meshIndex = index % this._mesh.length;
 
             const matrix = Matrix.Compose(scale, rot, pos);
             clonedMeshArray[meshIndex].thinInstanceAdd(matrix);
@@ -268,12 +278,15 @@ export class RandomEffector {
             (-0.5 + b) * this._strength,
             (-0.5 + c) * this._strength
         );
-        //var m1=this._scale.multiplyByFloats(this._strength,this._strength,this._strength);
         return vec.add(m1);
     }
     addClient(c: Cloner) {
         this._clients.push(c);
     }
+
+    /**
+     * Call this function after creating and setting the effector to update instances/clones transforms.
+     */
     updateClients() {
         this._clients.forEach(function (c: Cloner) {
             c.update();

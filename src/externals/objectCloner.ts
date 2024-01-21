@@ -17,11 +17,12 @@ export class ObjectCloner extends Cloner {
     private _instance_nr;
     private _positions;
     private _normals;
+    private isPickable: boolean;
     constructor(
         mesh: Array<Mesh>,
         template: Mesh,
         scene: Scene,
-        { useInstances = true } = {}
+        { useInstances = true, isPickable = false } = {}
     ) {
         super();
         ObjectCloner.instance_nr = 0 | (ObjectCloner.instance_nr + 1);
@@ -29,6 +30,7 @@ export class ObjectCloner extends Cloner {
         this._scene = scene;
         this._template = template;
         this._useInstances = useInstances;
+        this.isPickable = isPickable;
         this._clones = [];
         this._positions = template.getFacetLocalPositions();
         this._normals = template.getFacetLocalNormals();
@@ -61,7 +63,8 @@ export class ObjectCloner extends Cloner {
             n.createClone(
                 this._mesh[cix],
                 this._useInstances,
-                `${this._mesh[cix].name}_mc${ObjectCloner.instance_nr}_${i}`
+                `${this._mesh[cix].name}_mc${ObjectCloner.instance_nr}_${i}`,
+                this.isPickable
             );
         }
     }
@@ -93,11 +96,16 @@ export class ObjectCloner extends Cloner {
         return this._rootNode;
     }
 
+    /**
+     * Deletes all Cloner's children and disposes the root Node.
+     */
     delete(): void {
         for (let i = this._count! - 1; i >= 0; i--) {
             this._clones[i].delete();
         }
         this._clones.length = 0;
-        this._rootNode!.dispose();
+        if (this._rootNode) {
+            this._rootNode.dispose();
+        }
     }
 }

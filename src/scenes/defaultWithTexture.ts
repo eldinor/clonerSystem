@@ -121,11 +121,12 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
 
         const mc = new MatrixCloner([sphere, box], scene, {
             mcount: { x: 2, y: 3, z: 4 },
+            isPickable: true,
         });
 
-        //  mc.toThin();
+        mc.toThin();
 
-        const ico = MeshBuilder.CreateIcoSphere("ico", { radius: 9 });
+        const ico = MeshBuilder.CreateIcoSphere("ico", { radius: 129 });
 
         const ico2 = MeshBuilder.CreateIcoSphere("ico2", { radius: 1 });
 
@@ -137,20 +138,22 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
             R: { x: 0, y: 90, z: 0 },
             S: { x: 1, y: 2, z: 1 },
             iModeRelative: false,
+            isPickable: false,
         });
 
         console.log(lc);
 
-        //  lc.toThin();
+        lc.toThin();
 
         //    Animation.CreateAndStartAnimation("ani", lc, "growth", 30, 120, 0, 10);
 
         const rc = new RadialCloner([box, sphere, ico2], scene, {
             count: 24,
             radius: 12,
+            isPickable: true,
         });
 
-        //    rc.toThin(true, "Raddd");
+        rc.toThin(true, "RadCloner");
         //    Animation.CreateAndStartAnimation('radanimation', rc, 'radius', 30, 120, 0, 90);
         //   console.log(mc);
 
@@ -159,21 +162,21 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
         box1.scaling.scaleInPlace(5);
         box1.bakeCurrentTransformIntoVertices();
 
-        const oc = new ObjectCloner([box], ico, scene);
+        const oc = new ObjectCloner([box], ico, scene, { isPickable: false });
 
-        // oc.toThin();
+        oc.toThin();
 
-        let reff = new RandomEffector();
+        const reff = new RandomEffector();
 
         reff.scale = { x: 0, y: 2, z: 0 };
 
-        rc.addEffector(reff, 1);
+        //     rc.addEffector(reff, 1);
 
-        mc.addEffector(reff, 1);
+        //    mc.addEffector(reff, 1);
 
-        oc.addEffector(reff, 1);
+        //     oc.addEffector(reff, 1);
 
-        lc.addEffector(reff, 1);
+        //      lc.addEffector(reff, 1);
 
         reff.strength = 0.5;
         reff.updateClients();

@@ -29,6 +29,7 @@ export class RadialCloner extends Cloner {
     private _endangle: number;
     private _offset: number;
     private _align: boolean;
+    private isPickable: boolean;
 
     constructor(
         mesh: Array<Mesh>,
@@ -42,6 +43,7 @@ export class RadialCloner extends Cloner {
             endangle = 360,
             useInstances = true,
             plane = { x: 1, y: 0, z: 1 },
+            isPickable = false,
         } = {}
     ) {
         super();
@@ -53,6 +55,7 @@ export class RadialCloner extends Cloner {
         });
         this._scene = scene;
         this._useInstances = useInstances;
+        this.isPickable = isPickable;
         this._clones = [];
         this._count = Number(count);
         this._radius = Number(radius);
@@ -104,7 +107,8 @@ export class RadialCloner extends Cloner {
             n.createClone(
                 this._mesh[cix],
                 this._useInstances,
-                `${this._mesh[cix].name}_rc${this._instance_nr}_${i}`
+                `${this._mesh[cix].name}_rc${this._instance_nr}_${i}`,
+                this.isPickable
             );
         }
     }
@@ -193,11 +197,17 @@ export class RadialCloner extends Cloner {
         this.calcPos();
         this.calcSize();
     }
+
+    /**
+     * Deletes all Cloner's children and disposes the root Node.
+     */
     delete() {
         for (let i = this._count! - 1; i >= 0; i--) {
             this._clones[i].delete();
         }
-        this._rootNode!.dispose();
+        if (this._rootNode) {
+            this._rootNode.dispose();
+        }
     }
     recalc() {
         const cnt = this._count;

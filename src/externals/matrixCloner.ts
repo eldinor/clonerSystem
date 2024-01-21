@@ -28,6 +28,7 @@ export class MatrixCloner extends Cloner {
     private _mcount: ICSVector3;
     private _iModeRelative: boolean;
     private _instance_nr: number;
+    isPickable: boolean;
 
     constructor(
         mesh: Array<Mesh>,
@@ -38,6 +39,7 @@ export class MatrixCloner extends Cloner {
             mcount = { x: 3, y: 3, z: 3 },
             size = { x: 2, y: 2, z: 2 },
             iModeRelative = false,
+            isPickable = false,
         } = {}
     ) {
         super();
@@ -50,6 +52,7 @@ export class MatrixCloner extends Cloner {
 
         this._scene = scene;
         this._useInstances = useInstances;
+        this.isPickable = isPickable;
         this._clones = [];
         this._size = size;
         this._mcount = mcount;
@@ -98,7 +101,8 @@ export class MatrixCloner extends Cloner {
                     n.createClone(
                         this._mesh[cix],
                         this._useInstances,
-                        `${this._mesh[cix].name}_mc${MatrixCloner.instance_nr}_${x}${y}${z}`
+                        `${this._mesh[cix].name}_mc${MatrixCloner.instance_nr}_${x}${y}${z}`,
+                        this.isPickable
                     );
                 }
             }
@@ -191,15 +195,17 @@ export class MatrixCloner extends Cloner {
         return this._rootNode;
     }
 
-    /**.
-     * Deletes all Cloner children and disposes the root Node.
+    /**
+     * Deletes all Cloner's children and disposes the root Node.
      */
     delete(): void {
         for (let i = this._count! - 1; i >= 0; i--) {
             this._clones[i].delete();
         }
         this._clones.length = 0;
-        this._rootNode!.dispose();
+        if (this._rootNode) {
+            this._rootNode.dispose();
+        }
     }
 
     update(): void {
