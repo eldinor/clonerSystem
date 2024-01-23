@@ -11,12 +11,3 @@ export {
     LinearCloner,
     ObjectCloner,
 };
-
-/*
-
-export const RandomEffector = _RandomEffector;
-export const RadialCloner = _RadialCloner;
-export const MatrixCloner = _MatrixCloner;
-export const LinearCloner = _LinearCloner;
-export const ObjectCloner = _ObjectCloner;
-*/

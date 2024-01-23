@@ -1,7 +1,6 @@
 import { Cloner, CMesh } from "./core";
 import type { Scene } from "@babylonjs/core/scene";
 import type { Mesh } from "@babylonjs/core/Meshes/";
-// import {Mesh } from "@babylonjs/core/Meshes/";
 
 export interface ICSVector3 {
     readonly x: number;
@@ -19,6 +18,7 @@ export interface ICSVector3 {
  * @param mcount The number of clones in x,y and z direction. Default { x: 3, y: 3, z: 3 }.
  * @param size The distance from one clon to another in x,y and z direction. Default { x: 2, y: 2, z: 2 }.
  * @param useInstances Flag if clones should be technical "clones" or "instances". Default true.
+ * @param isPickable Flag true if Cloner meshes should be pickable. Default false.
  */
 
 export class MatrixCloner extends Cloner {
@@ -28,7 +28,7 @@ export class MatrixCloner extends Cloner {
     private _mcount: ICSVector3;
     private _iModeRelative: boolean;
     private _instance_nr: number;
-    isPickable: boolean;
+    private isPickable: boolean;
 
     constructor(
         mesh: Array<Mesh>,
@@ -142,7 +142,6 @@ export class MatrixCloner extends Cloner {
         this._size = s;
         this.update();
     }
-
     get size() {
         return this._size;
     }

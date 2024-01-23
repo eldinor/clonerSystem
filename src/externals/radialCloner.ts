@@ -17,6 +17,7 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
  * @param offset The angle in degrees.
  * @param useInstances Flag if clones should be technical "clones" or "instances". Default true = instances.
  * @param plane The object {x,y,z} describing the cloners orientation. Default { x: 1, y: 0, z: 1 }.
+ * @param isPickable Flag true if Cloner meshes should be pickable. Default false.
  */
 
 export class RadialCloner extends Cloner {
@@ -77,6 +78,7 @@ export class RadialCloner extends Cloner {
         this.createClones();
         this.update();
     }
+
     createClone(parent: CMesh) {
         const c = new RadialCloner(this._mesh, this._scene, {
             count: this._count,
@@ -112,6 +114,7 @@ export class RadialCloner extends Cloner {
             );
         }
     }
+
     private calcRot() {
         for (let i = 0; i < this._count!; i++) {
             const arange = this._endangle - this._startangle;
@@ -143,6 +146,7 @@ export class RadialCloner extends Cloner {
             (this._clones[i].getChildren()[0] as Mesh).rotation = vRet;
         }
     }
+
     private calcSize() {
         for (let i = 0; i < this._count!; i++) {
             (this._clones[i].getChildren()[0] as Mesh).scaling = this.eScale(
@@ -150,6 +154,7 @@ export class RadialCloner extends Cloner {
             );
         }
     }
+
     private calcPos() {
         this.eReset();
         for (let i = 0; i < this._count!; i++) {
@@ -192,6 +197,7 @@ export class RadialCloner extends Cloner {
             }
         }
     }
+
     update() {
         this.calcRot();
         this.calcPos();
@@ -209,11 +215,13 @@ export class RadialCloner extends Cloner {
             this._rootNode.dispose();
         }
     }
+
     recalc() {
         const cnt = this._count;
         this.count = 0;
         this.count = cnt;
     }
+
     set count(scnt) {
         const cnt = Number(scnt);
         if (cnt < Number(this._count)) {
@@ -232,6 +240,7 @@ export class RadialCloner extends Cloner {
     get count() {
         return this._count;
     }
+
     set offset(off) {
         this._offset = (Math.PI * off) / 180;
         this.update();
@@ -239,9 +248,15 @@ export class RadialCloner extends Cloner {
     get offset() {
         return (this._offset * 180) / Math.PI;
     }
+
+    /**
+     * Gets Cloner's root - an invisible mesh, the anchor and parent of all generated instances/clones.
+     * Transforming this root affects all underlying clones (childs) at once.
+     */
     get root() {
         return this._rootNode;
     }
+
     set radius(r) {
         this._radius = r;
         this.update();
@@ -249,6 +264,7 @@ export class RadialCloner extends Cloner {
     get radius() {
         return this._radius;
     }
+
     set align(a) {
         this._align = a;
         this.update();
@@ -256,6 +272,7 @@ export class RadialCloner extends Cloner {
     get align() {
         return this._align;
     }
+
     set startangle(sa) {
         this._startangle = (Math.PI * sa) / 180;
         this.update();
@@ -263,6 +280,7 @@ export class RadialCloner extends Cloner {
     get startangle() {
         return (this._startangle * 180) / Math.PI;
     }
+
     set endangle(se) {
         this._endangle = (Math.PI * se) / 180;
         this.update();
@@ -270,10 +288,12 @@ export class RadialCloner extends Cloner {
     get endangle(): number {
         return (this._endangle * 180) / Math.PI;
     }
+
     set plane(p: Vector3) {
         this._plane = new Vector3(p.x, p.y, p.z);
         this.update();
     }
+
     setScaling(ix: number, sc: Vector3) {
         this._clones[ix].scaling = new Vector3(sc.x, sc.y, sc.z);
         this.update();

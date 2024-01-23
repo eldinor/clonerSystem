@@ -1,5 +1,5 @@
 import { Matrix, Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
-import type { Scene } from "@babylonjs/core/scene";
+import { Scene } from "@babylonjs/core/scene";
 import { InstancedMesh, Mesh } from "@babylonjs/core/Meshes/";
 
 export class CMesh extends Mesh {
@@ -16,15 +16,7 @@ export class CMesh extends Mesh {
         this._cloner = cloner;
         this.parent = parent;
     }
-    delete() {
-        if (this._cloner != null) {
-            this._cloner.delete();
-        } else {
-            this.getChildren()[0].dispose();
-        }
-        this.parent = null;
-        this.dispose();
-    }
+
     createClone(
         item: Cloner | Mesh,
         useInstances: boolean,
@@ -50,6 +42,15 @@ export class CMesh extends Mesh {
 
         return c;
     }
+    delete() {
+        if (this._cloner != null) {
+            this._cloner.delete();
+        } else {
+            this.getChildren()[0].dispose();
+        }
+        this.parent = null;
+        this.dispose();
+    }
 }
 
 export class Cloner {
@@ -64,6 +65,10 @@ export class Cloner {
 
     _count: number | undefined;
     _effectors: Array<IEffector> = [];
+
+    createClone(_parent: Mesh) {
+        throw new Error("Method not implemented.");
+    }
 
     /**
      * Deletes all Cloner's children and disposes the root Node.
@@ -81,10 +86,6 @@ export class Cloner {
         if (this._rootNode !== null) {
             this._rootNode.setEnabled(enabled);
         }
-    }
-
-    createClone(_parent: Mesh) {
-        throw new Error("Method not implemented.");
     }
 
     update() {
@@ -157,7 +158,8 @@ export class Cloner {
      * Be aware that the original Cloner will be disposed, so Cloner methods will not work anymore. Use the root node and its individual child meshes for further processing.
      *
      * @param addSelf If true, adds the source mesh to the matrix. Default false.
-     * @param rootName Allow to define the name of the root mesh which will be the parent of cloned source meshes and all thin instances. If empty, Cloner class name will be used for the name.
+     * @param rootName Allow to define the name of the root mesh which will be the parent of cloned source meshes and all thin instances.
+     * If empty, Cloner class name will be used for the name.
      */
     toThin(addSelf?: boolean, rootName?: string): Mesh[] {
         //  console.log("cSystem", this);

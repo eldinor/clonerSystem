@@ -8,6 +8,8 @@ import type { Mesh } from "@babylonjs/core/Meshes/";
  * @param mesh The array of meshes/cloners to be cloned, meshes will be made inactive after construction.
  * @param template The mesh acting as template.
  * @param useInstances Flag if clones should be technical "clones" or "instances". Default true.
+ * @param isPickable Flag true if Cloner meshes should be pickable. Default false.
+
  */
 
 export class ObjectCloner extends Cloner {
@@ -49,6 +51,7 @@ export class ObjectCloner extends Cloner {
         this.createClones();
         this.calcPos();
     }
+
     createClones() {
         let cix = 0;
         this._count = this._positions.length;
@@ -68,6 +71,7 @@ export class ObjectCloner extends Cloner {
             );
         }
     }
+
     calcRot() {
         for (let i = 0; i < this._count!; i++) {
             const vRet = this.eRotate(Cloner.vZero);
@@ -85,6 +89,7 @@ export class ObjectCloner extends Cloner {
             this._clones[i].position = this.ePosition(this._positions[i]);
         }
     }
+
     update() {
         if (this._count! > 0) {
             this.calcRot();
@@ -92,6 +97,11 @@ export class ObjectCloner extends Cloner {
             this.calcSize();
         }
     }
+
+    /**
+     * Gets Cloner's root - an invisible mesh, the anchor and parent of all generated instances/clones.
+     * Transforming this root affects all underlying clones (childs) at once.
+     */
     get root() {
         return this._rootNode;
     }

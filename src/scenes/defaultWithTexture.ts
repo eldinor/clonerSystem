@@ -124,7 +124,7 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
             isPickable: true,
         });
 
-        mc.toThin();
+        //  mc.toThin();
 
         const ico = MeshBuilder.CreateIcoSphere("ico", { radius: 129 });
 
@@ -143,7 +143,18 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
 
         console.log(lc);
 
-        lc.toThin();
+        const lc2 = new LinearCloner([box, ico2], scene, {
+            count: 48,
+            offset: 3,
+            growth: 1.25,
+            P: { x: 0, y: 10, z: 148 },
+            R: { x: 0, y: 90, z: 0 },
+            S: { x: 1, y: 2, z: 1 },
+            iModeRelative: false,
+            isPickable: false,
+        });
+
+        //     lc.toThin();
 
         //    Animation.CreateAndStartAnimation("ani", lc, "growth", 30, 120, 0, 10);
 
@@ -153,7 +164,7 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
             isPickable: true,
         });
 
-        rc.toThin(true, "RadCloner");
+        //     rc.toThin(true, "RadCloner");
         //    Animation.CreateAndStartAnimation('radanimation', rc, 'radius', 30, 120, 0, 90);
         //   console.log(mc);
 
@@ -164,7 +175,7 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
 
         const oc = new ObjectCloner([box], ico, scene, { isPickable: false });
 
-        oc.toThin();
+        //     oc.toThin();
 
         const reff = new RandomEffector();
 

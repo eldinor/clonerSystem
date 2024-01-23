@@ -55,7 +55,9 @@ export class LinearCloner extends Cloner {
         } = {}
     ) {
         super();
+        console.log(LinearCloner.instance_nr);
         LinearCloner.instance_nr = 0 | (LinearCloner.instance_nr + 1);
+        console.log(LinearCloner.instance_nr);
         this._mesh = mesh;
         this._mesh.forEach(function (m: Mesh) {
             m.setEnabled(false);
@@ -112,9 +114,10 @@ export class LinearCloner extends Cloner {
 
         return c.root;
     }
+
     private createClones(start = 0) {
         for (let i = start; i < this._count!; i++) {
-            //create Node for each clone, RADIAL=>parent = rootnode
+            //create Node (CMesh) for each clone, RADIAL=>parent = rootnode
             const n = new CMesh(
                 `n_lc${this._instance_nr}_${i}`,
                 this._scene,
@@ -143,6 +146,7 @@ export class LinearCloner extends Cloner {
                 this.eScale(orig);
         }
     }
+
     private calcPos() {
         this.eReset();
         let f = this._growth;
@@ -179,6 +183,7 @@ export class LinearCloner extends Cloner {
             this.calcSize();
         }
     }
+
     recalc() {
         const cnt = this._count;
         this.count = 0;
@@ -187,10 +192,12 @@ export class LinearCloner extends Cloner {
     get growth() {
         return this._growth;
     }
+
     set growth(g) {
         this._growth = g;
         this.update();
     }
+
     /**
      * Deletes all Cloner's children and disposes the root Node.
      */
@@ -204,6 +211,7 @@ export class LinearCloner extends Cloner {
             this._rootNode.dispose();
         }
     }
+
     set count(scnt) {
         const cnt = Number(scnt);
 
@@ -220,6 +228,7 @@ export class LinearCloner extends Cloner {
         }
         this.update();
     }
+
     get count() {
         return this._count;
     }
@@ -247,6 +256,7 @@ export class LinearCloner extends Cloner {
     get position() {
         return { x: this._P.x, y: this._P.y, z: this._P.z };
     }
+
     set scale(s) {
         this._S.x = s.x;
         this._S.y = s.y;
@@ -256,6 +266,7 @@ export class LinearCloner extends Cloner {
     get scale() {
         return { x: this._S.x, y: this._S.y, z: this._S.z };
     }
+
     set rotation(r) {
         this._R.x = (r.x * Math.PI) / 180;
         this._R.y = (r.y * Math.PI) / 180;
@@ -269,6 +280,7 @@ export class LinearCloner extends Cloner {
             z: (this._R.z * 180) / Math.PI,
         };
     }
+
     get rotation3() {
         return new Vector3(this._R.x, this._R.y, this._R.z);
     }
@@ -278,6 +290,7 @@ export class LinearCloner extends Cloner {
         this._R.z = vec.z;
         this.update();
     }
+
     set offset(o: number) {
         this._offset = o;
         this.update();
@@ -285,6 +298,7 @@ export class LinearCloner extends Cloner {
     get offset() {
         return this._offset;
     }
+
     /**
      * Gets Cloner's root - an invisible mesh, the anchor and parent of all generated instances/clones.
      * Transforming this root affects all underlying clones (childs) at once.
@@ -292,6 +306,9 @@ export class LinearCloner extends Cloner {
     get root() {
         return this._rootNode;
     }
+    /**
+     * Gets the array of source meshes used in Cloner.
+     */
     get meshes() {
         return this._mesh;
     }
