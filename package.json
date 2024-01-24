@@ -58,6 +58,9 @@
     "email": "eldinor@gmail.com",
     "url": "https://babylonpress.org/"
   },
+  "contributors": [
+    {"name":"androdlang","url":"https://github.com/androdlang/Extensions/tree/master/ClonerSystem"}
+  ],
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/eldinor/clonerSystem/issues"
