@@ -1,14 +1,61 @@
-# Babylon.js, webpack and es6 modules
+# clonerSystem
 
-A Babylon.js sample project using typescript, latest babylon.js es6 core module, webpack 4 with webpack dev server, hot loading, eslint, vscode support and more.
+## Cloner System for Babylon.js
 
-## Before getting started
+Based on Cloner System extension https://github.com/BabylonJS/Extensions/tree/master/ClonerSystem by https://github.com/androdlang
 
-This is a basic demo using Babylon's core module only. It is based on the [Getting started guide](https://doc.babylonjs.com/) at the documentation page. A lot of the engine's features are **not** covered here. I will slowly add more and more projects and more examples.
+More info and docs here - https://doc.babylonjs.com/communityExtensions/clonerSystem
 
-If you have any questions, you are very much invited to the [Babylon.js forum](https://forum.babylonjs.com) where I am hanging around almost daily.
+Definitions:
+
+<ul><li>
+		Cloners: given one or several meshes, either clones or instances will distributed in a specific manner. If more than one mesh is provided, the meshes are distributed alternatively. Additionally, cloners can be nested, so it is possible to clone cloners. Each cloner can have several Effectors (in particular order) to influence the Scale/Position/Rotation parameter of a clone (or cloner). A sensitivity parameter controls this influence for a cloner. Following Objects are designated:
+	</li>
+	<li>
+		RadialCloner: radial distribution where following parameters are recognized: input-meshlist, count, radius, offset, startangle, endangle, Effector-sensitivity for Position, Scale and Rotation, alignment-flag, orientation.
+	</li>
+	<li>
+		LinearCloner: linear distribution where following parameters are recognized: input-meshlist, count, offset, growth, Effector-sensitivity for Position, Scale and Rotation. An interpolation-mode-flag&nbsp; determines, if the clone -parameters (Scale/Position/Rotation) are interpreted as "step" or "end"-values.
+	</li>
+	<li>
+		MatrixCloner: distribution in 3D space where following parameters are recognized: input-meshlist, mcount, size.
+	</li>
+	<li>
+		ObjectCloner: distribution over faces of a mesh where following parameters are recognized: input-meshlist, reference-mesh.
+	</li>
+	<li>
+		RandomEffector: influences Scale/Position/Rotation of a clone with repeatable random values, controlled with an overall "strength" parameter. Not quite finished, but basically working.
+	</li>
+</ul>
+
+## Demo
+
+The demo with all cloners - https://babylonpress.org/cloner/
+
+## Import and Usage
+
+Import is done through src/clonersystem/index.ts.
+You may import the whole ClonerSystem and then use like ClonerSystem.MatrixCloner etc.
+Or, for better tree shaking, import them like <br><pre>import { RandomEffector } from "../clonersystem";<br>import { MatrixCloner } from "../clonersystem"</pre>
+
+Then use like
+
+<pre>
+
+        const mc = new MatrixCloner([capsule, box, sphere], scene, {
+            mcount: { x: 5, y: 5, z: 5 },
+        });
+
+        mc.root!.position = new Vector3(-10, 0, 15);
+		const rr = new RandomEffector();
+        rr.strength = 1;
+        rr.position = { x: 2, y: 0, z: 2 };
+        rr.rotation = { x: 70, y: 30, z: 0 };
+        mc.addEffector(rr, 1);</pre>
 
 ## Getting started
+
+This is a Babylon.js project using typescript, latest babylon.js es6 core module, webpack 4 with webpack dev server, hot loading, eslint, vscode support and more.
 
 To run the basic scene:
 
@@ -16,8 +63,6 @@ To run the basic scene:
 2. run `npm install` to install the needed dependencies.
 3. run `npm start`
 4. A new window should open in your default browser. if it doesn't, open `http://localhost:8080`
-5. ????
-6. Profit
 
 Running `npm start` will start the webpack dev server with hot-reloading turned on. Open your favorite editor (mine is VSCode, but you can use nano. we don't discriminate) and start editing.
 
@@ -37,18 +82,6 @@ Note - the build process will be very slow if you keep all scenes for production
 
 Open the URL in a webgpu-enabled browser and add "?engine=webgpu" to the URL. If you want to add a different scene, add it as a query parameter: `http://localhost:8080/?scene=physicsWithAmmo&engine=webgpu`.
 
-## Running validation tests
-
-It is possible to run validation tests to the scenes using playwright. To run the tests, run `npm run test:visuals`. This will run the tests in headless mode.
-To configure the tests see the `/tests/` directory, and the `validation.spec.ts` file.
-
-To generate the snapshots after adjusting the tests you can run `npm run test:visuals -- --update-snapshots`. This will auto-generate the snapshots for the tests.
-
-## Unit tests
-
-To run the unit tests, run `npm run test:unit`. This will run the tests in headless mode.
-To add new tests, add a file anywhere in the source folder, called `FILENAME.unit.spec.ts`. The tests will be automatically picked up by jest.
-
 ## What else can I do
 
 To lint your source code run `npm run lint`
@@ -57,25 +90,12 @@ To build the bundle in order to host it, run `npm run build`. This will bundle y
 
 Building will take some time, as it will build each sample (and create a different module for each). If you want to speed up the process, define the scene you want to render in `createScene.ts` (you can see the comment there)
 
-## What is this
-
-That's an abstract question! What is which one of those wonderful things?
-
-Babylon.js is [the world's leading WebGL engine](https://babylonjs.com) that starts with a 'b'. You should give it a try and leave those other numbers and letters behind. To read more about it and see some amazing samples, go to the [Babylon.js website](https://babylonjs.com), [Babylon's Playground](https://playground.babylonjs.com) or [Babylon's documentation](https://doc.babylonjs.com).
-
-The rest? You should know already, this is why you are here.
-
 ## What is covered
 
-- Latest typescript version
-- Simple texture loading (using url-loader)
-- dev-server will start on command (webpack-dev-server)
-- A working core-only example of babylon
-- Full debugging with any browser AND VS Code
-- (production) bundle builder.
-- eslint default typescript rules integrated
-
-## It takes too long to build
-
-To speed up production build time remove all of the scenes except for the one you want to build.
-This project is meant as a way to show different ways to use Babylon.js and not as a way to efficiently build a production-ready application.
+-   Latest typescript version
+-   Simple texture loading (using url-loader)
+-   dev-server will start on command (webpack-dev-server)
+-   A working core-only example of babylon
+-   Full debugging with any browser AND VS Code
+-   (production) bundle builder.
+-   eslint default typescript rules integrated
