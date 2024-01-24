@@ -28,32 +28,14 @@ import {
 
 import { Animation } from "@babylonjs/core/Animations/animation";
 
-import {
-    HemisphericLight,
-    InstancedMesh,
-    Mesh,
-    MeshBuilder,
-} from "@babylonjs/core";
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { Cloner } from "../externals/core";
 
 import { CreateBox } from "@babylonjs/core/Meshes/Builders/boxBuilder";
 import { CreateCapsule } from "@babylonjs/core/Meshes/Builders/capsuleBuilder";
 
-import {
-    Animation,
-    CreateIcoSphere,
-    InstancedMesh,
-    MeshBuilder,
-} from "@babylonjs/core/";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
 
-import { RandomEffector } from "../clonersystem";
-import { RadialCloner } from "../clonersystem";
-import { MatrixCloner } from "../clonersystem";
-import { LinearCloner } from "../clonersystem";
-import { ObjectCloner } from "../clonersystem";
-
-import { ClonerSystem } from "../clonersystem";
 import { VertexBuffer } from "@babylonjs/core/Buffers/buffer";
 
 export class DefaultSceneWithTexture implements CreateSceneClass {
@@ -110,7 +92,6 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
         sphere.position.y = 1;
         sphere.scaling.z = 1.5;
         sphere.bakeCurrentTransformIntoVertices();
-
 
         sphere.material = new StandardMaterial("sphere material", scene);
         (sphere.material as StandardMaterial).diffuseColor = Color3.Teal();
