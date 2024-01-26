@@ -1,7 +1,7 @@
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { WebGPUEngine } from "@babylonjs/core/Engines/webgpuEngine";
 import { getSceneModule } from "./createScene";
-import "@babylonjs/core/Engines/WebGPU/Extensions/engine.uniformBuffer";
+// import "@babylonjs/core/Engines/WebGPU/Extensions/engine.uniformBuffer";
 
 export const babylonInit = async (): Promise<void> => {
     const createSceneModule = getSceneModule();
@@ -16,10 +16,10 @@ export const babylonInit = async (): Promise<void> => {
     if (engineType === "webgpu") {
         const webGPUSupported = await WebGPUEngine.IsSupportedAsync;
         if (webGPUSupported) {
-            const webgpu = engine = new WebGPUEngine(canvas, {
+            const webgpu = (engine = new WebGPUEngine(canvas, {
                 adaptToDeviceRatio: true,
                 antialias: true,
-            });
+            }));
             await webgpu.initAsync();
             engine = webgpu;
         } else {
