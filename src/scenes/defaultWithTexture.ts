@@ -11,7 +11,6 @@ import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 
 import grassTextureUrl from "../../assets/grass.jpg";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
-import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
