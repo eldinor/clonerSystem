@@ -4,14 +4,10 @@
   "description": "Cloner System for Babylon.js. Creates instances or clones from array of meshes and distributes them in a specific manner. Each cloner can have several transform Effectors",
   "main": "index.ts",
   "dependencies": {
-    "@babylonjs/core": "^6.0.0",
-    "@babylonjs/gui-editor": "^6.0.0",
-    "@babylonjs/havok": "^1.0.0",
-    "@babylonjs/inspector": "^6.0.0",
-    "@babylonjs/loaders": "^6.0.0",
-    "@babylonjs/materials": "^6.0.0",
-    "ammo.js": "github:kripken/ammo.js",
-    "recast-detour": "^1.6.1"
+    "@babylonjs/core": "^6.39.0",
+    "@babylonjs/inspector": "^6.39.0",
+    "@babylonjs/loaders": "^6.39.0",
+    "@babylonjs/materials": "^6.39.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.31.1",
@@ -28,6 +24,7 @@
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.2",
     "ts-shader-loader": "^2.0.1",
+    "typedoc": "^0.25.7",
     "typescript": "^5.0.0",
     "url-loader": "^4.1.1",
     "webpack": "^5.76.0",
@@ -36,6 +33,7 @@
     "webpack-merge": "^5.8.0"
   },
   "scripts": {
+    "doc": "npx typedoc src/externals/index.ts",
     "start": "npx webpack serve --config webpack.dev.js",
     "start:test": "npx webpack serve --config webpack.tests.js",
     "build:dev": "npx webpack --config webpack.dev.js",
@@ -46,7 +44,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RaananW/babylonjs-webpack-es6.git"
+    "url": "git+https://github.com/eldinor/clonerSystem.git"
   },
   "keywords": [
     "Babylon.js",
@@ -56,13 +54,16 @@
     "es6"
   ],
   "author": {
-    "name": "Raanan Weber",
-    "email": "info@raananweber.com",
-    "url": "http://blog.raananweber.com/"
+    "name": "Andrei Stepanov",
+    "email": "eldinor@gmail.com",
+    "url": "https://babylonpress.org/"
   },
+  "contributors": [
+    {"name":"androdlang","url":"https://github.com/androdlang/Extensions/tree/master/ClonerSystem"}
+  ],
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/RaananW/babylonjs-webpack-es6/issues"
+    "url": "https://github.com/eldinor/clonerSystem/issues"
   },
-  "homepage": "https://github.com/RaananW/babylonjs-webpack-es6"
+  "homepage": "https://doc.babylonjs.com/communityExtensions/clonerSystem"
 }
