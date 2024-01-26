@@ -1,9 +1,7 @@
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
-import { Matrix, Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { CreateSphere } from "@babylonjs/core/Meshes/Builders/sphereBuilder";
-import { CreateGround } from "@babylonjs/core/Meshes/Builders/groundBuilder";
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { CreateSceneClass } from "../createScene";
 
@@ -17,23 +15,18 @@ import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator"
 
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
-import { MatrixCloner } from "../externals/matrixCloner";
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import {
+    MatrixCloner,
     LinearCloner,
-    ObjectCloner,
     RadialCloner,
+    ObjectCloner,
     RandomEffector,
-} from "../externals";
-
-import { Animation } from "@babylonjs/core/Animations/animation";
-
-import {
-    HemisphericLight,
-    InstancedMesh,
-    Mesh,
-    MeshBuilder,
-} from "@babylonjs/core";
-import { Cloner } from "../externals/core";
+} from "../clonerSystem";
+import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
+import roomEnvironment from "../../assets/environment/room.env";
+import { CubeTexture } from "@babylonjs/core/Materials/Textures/";
+import { Color3 } from "@babylonjs/core/Maths/math.color";
 
 export class DefaultSceneWithTexture implements CreateSceneClass {
     createScene = async (
@@ -42,21 +35,20 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
     ): Promise<Scene> => {
         // This creates a basic Babylon Scene object (non-mesh)
         const scene = new Scene(engine);
-
+        scene.environmentTexture = new CubeTexture(roomEnvironment, scene);
         // Uncomment to load the inspector (debugging) asynchronously
 
-        void Promise.all([
-            import("@babylonjs/core/Debug/debugLayer"),
-            import("@babylonjs/inspector"),
-        ]).then((_values) => {
-            console.log(_values);
-            scene.debugLayer.show({
-                handleResize: true,
-                overlay: true,
-                embedMode: true,
-                globalRoot: document.getElementById("#root") || undefined,
-            });
-        });
+        // void Promise.all([
+        //     import("@babylonjs/core/Debug/debugLayer"),
+        //     import("@babylonjs/inspector"),
+        // ]).then((_values) => {
+        //     console.log(_values);
+        //     scene.debugLayer.show({
+        //         handleResize: true,
+        //         overlay: true,
+        //         globalRoot: document.getElementById("#root") || undefined,
+        //     });
+        // });
 
         // This creates and positions a free camera (non-mesh)
         const camera = new ArcRotateCamera(
@@ -74,50 +66,42 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
         // This attaches the camera to the canvas
         camera.attachControl(canvas, true);
 
-        // Our built-in 'sphere' shape.
-        const sphere = CreateSphere(
-            "sphere",
-            { diameter: 2, segments: 32 },
-            scene
-        );
-
-        const light = new HemisphericLight("hemi", Vector3.Up(), scene);
-        light.intensity = 0.6;
-
-        // Move the sphere upward 1/2 its height
-        //   sphere.position.y = 1;
-
-        // Our built-in 'ground' shape.
-        /*
-        const ground = CreateGround("ground", { width: 6, height: 6 }, scene);
-
-        // Load a texture to be used as the ground material
-        const groundMaterial = new StandardMaterial("ground material", scene);
-        groundMaterial.diffuseTexture = new Texture(grassTextureUrl, scene);
-
-        ground.material = groundMaterial;
-        ground.receiveShadows = true;
-
         const light = new DirectionalLight(
             "light",
             new Vector3(0, -1, 1),
             scene
         );
-        light.intensity = 0.5;
+        light.intensity = 0.2;
         light.position.y = 10;
 
-        const shadowGenerator = new ShadowGenerator(512, light);
-        shadowGenerator.useBlurExponentialShadowMap = true;
-        shadowGenerator.blurScale = 2;
-        shadowGenerator.setDarkness(0.2);
+        const pbr = new PBRMaterial("pbr", scene);
 
-        shadowGenerator.getShadowMap()!.renderList!.push(sphere);
-        */
+        pbr.metallic = 0.0;
+        pbr.roughness = 0;
+
+        pbr.subSurface.isRefractionEnabled = true;
+        pbr.subSurface.indexOfRefraction = 2.1;
+
+        const pbrGreen = new PBRMaterial("pbrGreen", scene);
+        pbrGreen.metallic = 0.0;
+        pbrGreen.roughness = 0.5;
+        pbrGreen.albedoColor = Color3.Green();
+
+        const pbrRed = new PBRMaterial("pbrGreen", scene);
+        pbrRed.metallic = 0.0;
+        pbrRed.roughness = 0.5;
+        pbrRed.albedoColor = Color3.Red();
 
         const box = MeshBuilder.CreateBox("box");
 
-        //   const box1 = box.clone();
-        //   box1.makeGeometryUnique();
+        const sphere = MeshBuilder.CreateSphere(
+            "sphere",
+            { diameter: 2, segments: 32 },
+            scene
+        );
+
+        box.material = pbr;
+        sphere.material = pbrRed;
 
         const mc = new MatrixCloner([sphere, box], scene, {
             mcount: { x: 2, y: 3, z: 4 },
@@ -129,6 +113,8 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
         const ico = MeshBuilder.CreateIcoSphere("ico", { radius: 129 });
 
         const ico2 = MeshBuilder.CreateIcoSphere("ico2", { radius: 1 });
+
+        ico2.material = pbrGreen;
 
         const lc = new LinearCloner([box, sphere, ico2], scene, {
             count: 24,
@@ -192,36 +178,7 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
         reff.strength = 0.5;
         reff.updateClients();
 
-        //    bbb(lc);
-
-        //  let thinLC = lc.toThin();
-
-        //  console.log(thinLC);
-        /*
-        console.log(lc._clones);
-        console.log(typeof lc);
-
-        let isource: Mesh;
-        let scal, rot, pos;
-
-        lc._clones.forEach((c) => {
-            let inst = c.getChildren()[0] as InstancedMesh;
-            pos = c.position;
-            rot = Quaternion.FromEulerVector(inst.rotation);
-            scal = inst.scaling;
-            //  console.log(scal, rot, pos);
-            isource = inst.sourceMesh;
-            inst.sourceMesh.setEnabled(true);
-            let matrix = Matrix.Compose(scal, rot, pos);
-            inst.sourceMesh.thinInstanceAdd(matrix);
-        });
-
-        setTimeout(() => {
-            // isource.setEnabled(false);
-            lc.delete();
-        }, 4000);
-
-        */
+        //
 
         return scene;
     };
