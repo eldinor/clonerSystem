@@ -202,6 +202,43 @@ export class Cloner {
         console.log(clonedMeshArray);
         return clonedMeshArray;
     }
+
+    /**
+     * Converts all Cloner meshes to thin instances from the original meshes, then deletes this Cloner and returns an array of Cloner meshes.
+     * Be aware that instances of those original meshes become disabled, so if they are used in other Cloners one may want to use toThin() method instead.
+     * If you don't need animations and so on you may convert Cloner to thin instances. It greatly reduces the number og objects iterating in the render loop.
+     * @param addSelf If true, adds the source mesh to the matrix. Default false.
+     * @returns The array of original meshes: Mesh[]
+     */
+    toThinOriginals(addSelf?: boolean): Mesh[] {
+        //  console.log("cSystem", this);
+        //  console.log("addSelf", addSelf);
+
+        let scale, rot, pos;
+
+        this._clones.forEach((c, index) => {
+            const inst = c.getChildren()[0] as InstancedMesh;
+
+            pos = c.position;
+            rot = Quaternion.FromEulerVector(inst.rotation);
+            scale = inst.scaling;
+
+            const meshIndex = index % this._mesh.length;
+
+            const matrix = Matrix.Compose(scale, rot, pos);
+            this._mesh[meshIndex].thinInstanceAdd(matrix);
+            this._mesh[meshIndex].setEnabled(true);
+
+            if (addSelf) {
+                this._mesh[meshIndex].thinInstanceAddSelf();
+            }
+        });
+
+        this.delete();
+
+        console.log(this._mesh);
+        return this._mesh;
+    }
 }
 
 //

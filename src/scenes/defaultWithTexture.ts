@@ -26,6 +26,7 @@ import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import roomEnvironment from "../../assets/environment/room.env";
 import { CubeTexture } from "@babylonjs/core/Materials/Textures/";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
+import { Animation } from "@babylonjs/core/Animations";
 
 export class DefaultSceneWithTexture implements CreateSceneClass {
     createScene = async (
@@ -37,24 +38,24 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
         scene.environmentTexture = new CubeTexture(roomEnvironment, scene);
         // Uncomment to load the inspector (debugging) asynchronously
 
-        // void Promise.all([
-        //     import("@babylonjs/core/Debug/debugLayer"),
-        //     import("@babylonjs/inspector"),
-        // ]).then((_values) => {
-        //     console.log(_values);
-        //     scene.debugLayer.show({
-        //         handleResize: true,
-        //         overlay: true,
-        //         globalRoot: document.getElementById("#root") || undefined,
-        //     });
-        // });
+        void Promise.all([
+            import("@babylonjs/core/Debug/debugLayer"),
+            import("@babylonjs/inspector"),
+        ]).then((_values) => {
+            console.log(_values);
+            scene.debugLayer.show({
+                handleResize: true,
+                overlay: true,
+                globalRoot: document.getElementById("#root") || undefined,
+            });
+        });
 
         // This creates and positions a free camera (non-mesh)
         const camera = new ArcRotateCamera(
             "my first camera",
             0,
-            Math.PI / 3,
-            10,
+            1.3,
+            60,
             new Vector3(0, 0, 0),
             scene
         );
@@ -91,6 +92,11 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
         pbrRed.roughness = 0.5;
         pbrRed.albedoColor = Color3.Red();
 
+        const pbrBlue = new PBRMaterial("pbrBlue", scene);
+        pbrBlue.metallic = 0.0;
+        pbrBlue.roughness = 0.5;
+        pbrBlue.albedoColor = Color3.Blue();
+
         const box = MeshBuilder.CreateBox("box");
 
         const sphere = MeshBuilder.CreateSphere(
@@ -99,68 +105,196 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
             scene
         );
 
-        box.material = pbr;
-        sphere.material = pbrRed;
+        const cylinder = MeshBuilder.CreateCylinder("cylinder");
+        cylinder.material = new PBRMaterial("cylinderMat");
+        (cylinder.material as PBRMaterial).roughness = 0.3;
+        (cylinder.material as PBRMaterial).albedoColor = Color3.Teal();
 
-        const mc = new MatrixCloner([sphere, box], scene, {
-            mcount: { x: 2, y: 3, z: 4 },
-            isPickable: true,
-        });
+        (cylinder.material as PBRMaterial).subSurface.indexOfRefraction = 1.61;
 
-        //  mc.toThin();
-
-        const ico = MeshBuilder.CreateIcoSphere("ico", { radius: 129 });
+        const ico = MeshBuilder.CreateIcoSphere("ico", { radius: 120 });
 
         const ico2 = MeshBuilder.CreateIcoSphere("ico2", { radius: 1 });
 
+        const tetra = MeshBuilder.CreatePolyhedron("tetra", { type: 2 });
+        tetra.material = new PBRMaterial("tetraMat");
+        (tetra.material as PBRMaterial).roughness = 0.3;
+        (tetra.material as PBRMaterial).albedoColor = Color3.Purple();
+
         ico2.material = pbrGreen;
 
-        const lc = new LinearCloner([box, sphere, ico2], scene, {
-            count: 24,
-            offset: 3,
-            growth: 1.25,
-            P: { x: 48, y: 10, z: 0 },
-            R: { x: 0, y: 90, z: 0 },
-            S: { x: 1, y: 2, z: 1 },
-            iModeRelative: false,
-            isPickable: false,
-        });
+        box.material = pbr;
+        sphere.material = pbrRed;
+
+        /*
+        const torusKnot = MeshBuilder.CreateTorusKnot("tknot");
+        torusKnot.material = pbrBlue;
+*/
+        const torus = MeshBuilder.CreateTorus("torus");
+        torus.material = pbrBlue;
+
+        const mc = new MatrixCloner(
+            [sphere, ico2, torus, box, cylinder, tetra],
+            scene,
+            {
+                mcount: { x: 4, y: 6, z: 4 },
+                isPickable: true,
+            }
+        );
+
+        //  mc.toThin();
+
+        const lc = new LinearCloner(
+            [sphere, box, ico2, torus, cylinder, tetra],
+            scene,
+            {
+                count: 24,
+                offset: 3,
+                growth: 1.25,
+                P: { x: 48, y: 10, z: 0 },
+                R: { x: 0, y: 90, z: 0 },
+                S: { x: 2, y: 2, z: 2 },
+                iModeRelative: false,
+                isPickable: false,
+            }
+        );
 
         console.log(lc);
 
-        const lc2 = new LinearCloner([box, ico2], scene, {
-            count: 48,
-            offset: 3,
-            growth: 1.25,
-            P: { x: 0, y: 10, z: 148 },
-            R: { x: 0, y: 90, z: 0 },
-            S: { x: 1, y: 2, z: 1 },
-            iModeRelative: false,
-            isPickable: false,
-        });
+        const lc2 = new LinearCloner(
+            [cylinder, ico2, box, sphere, torus, tetra],
+            scene,
+            {
+                count: 48,
+                offset: 3,
+                growth: 3.25,
+                P: { x: 0, y: 10, z: 148 },
+                R: { x: 0, y: 90, z: 0 },
+                S: { x: 5, y: 5, z: 5 },
+                iModeRelative: false,
+                isPickable: false,
+            }
+        );
+
+        const lc3 = new LinearCloner(
+            [box, ico2, torus, sphere, cylinder, tetra],
+            scene,
+            {
+                count: 48,
+                offset: 3,
+                growth: 1.25,
+                P: { x: 0, y: 120, z: 0 },
+                R: { x: 0, y: 90, z: 0 },
+                S: { x: 1, y: 2, z: 1 },
+                iModeRelative: false,
+                isPickable: false,
+            }
+        );
 
         //     lc.toThin();
 
         //    Animation.CreateAndStartAnimation("ani", lc, "growth", 30, 120, 0, 10);
 
-        const rc = new RadialCloner([box, sphere, ico2], scene, {
-            count: 24,
-            radius: 12,
-            isPickable: true,
-        });
+        const rc = new RadialCloner(
+            [box, sphere, ico2, torus, cylinder, tetra],
+            scene,
+            {
+                count: 24,
+                radius: 12,
+                isPickable: true,
+            }
+        );
+
+        //
+
+        console.log(rc._rootNode);
+        //
+        const rc2 = new RadialCloner(
+            [box, sphere, ico2, torus, cylinder, tetra],
+            scene,
+            {
+                count: 24,
+                radius: 24,
+                isPickable: true,
+            }
+        );
+
+        //
 
         //     rc.toThin(true, "RadCloner");
-        //    Animation.CreateAndStartAnimation('radanimation', rc, 'radius', 30, 120, 0, 90);
+        const radstart = Animation.CreateAndStartAnimation(
+            "radanimation",
+            rc,
+            "radius",
+            30,
+            120,
+            0,
+            90,
+            0,
+            undefined,
+            ggg(rc)!
+        );
+
+        function ggg(c: any) {
+            Animation.CreateAndStartAnimation(
+                "radanimation",
+                c,
+                "radius",
+                30,
+                120,
+                90,
+                0,
+                undefined,
+                bbb(c.root)!
+            );
+        }
+
+        function bbb(c: any) {
+            Animation.CreateAndStartAnimation(
+                "rotationX",
+                c,
+                "rotation.x",
+                30,
+                120,
+                0,
+                Math.PI,
+
+                undefined
+            );
+        }
+
+        //       ggg(mc);
+
+        function gggLC(c: any) {
+            Animation.CreateAndStartAnimation(
+                "radanimation",
+                c,
+                "growth",
+                30,
+                120,
+                0,
+                10,
+                undefined
+                // bbb(c.root)!
+            );
+        }
+
+        gggLC(lc);
+        gggLC(lc2);
+        gggLC(lc3);
         //   console.log(mc);
 
-        const box1 = box.clone("box1");
-        box1.makeGeometryUnique();
-        box1.scaling.scaleInPlace(5);
-        box1.bakeCurrentTransformIntoVertices();
-
-        const oc = new ObjectCloner([box], ico, scene, { isPickable: false });
+        const oc = new ObjectCloner(
+            [box, sphere, ico2, torus, cylinder, tetra],
+            ico,
+            scene,
+            {
+                isPickable: false,
+            }
+        );
 
         //     oc.toThin();
+        // ggg(oc);
 
         const reff = new RandomEffector();
 
@@ -177,6 +311,16 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
         reff.strength = 0.5;
         reff.updateClients();
 
+        //
+        /*
+        rc.toThinOriginals();
+        mc.toThinOriginals();
+        lc.toThinOriginals();
+        oc.toThinOriginals();
+        lc2.toThinOriginals();
+        lc3.toThinOriginals();
+*/
+        //
         //
 
         return scene;
