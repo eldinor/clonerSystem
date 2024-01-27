@@ -206,7 +206,7 @@ export class Cloner {
     /**
      * Converts all Cloner meshes to thin instances from the original meshes, then deletes this Cloner and returns an array of Cloner meshes.
      * Be aware that instances of those original meshes become disabled, so if they are used in other Cloners one may want to use toThin() method instead.
-     * If you don't need animations and so on you may convert Cloner to thin instances. It greatly reduces the number og objects iterating in the render loop.
+     * If you don't need animations and so on you may convert Cloner to thin instances. It greatly reduces the number of objects iterating in the render loop.
      * @param addSelf If true, adds the source mesh to the matrix. Default false.
      * @returns The array of original meshes: Mesh[]
      */
