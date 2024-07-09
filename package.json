@@ -4,10 +4,10 @@
   "description": "Cloner System for Babylon.js. Creates instances or clones from array of meshes and distributes them in a specific manner. Each cloner can have several transform Effectors",
   "main": "index.ts",
   "dependencies": {
-    "@babylonjs/core": "^6.39.0",
-    "@babylonjs/inspector": "^6.39.0",
-    "@babylonjs/loaders": "^6.39.0",
-    "@babylonjs/materials": "^6.39.0"
+    "@babylonjs/core": "^7.14.0",
+    "@babylonjs/inspector": "^7.14.0",
+    "@babylonjs/loaders": "^7.14.0",
+    "@babylonjs/materials": "^7.14.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.31.1",
@@ -24,7 +24,7 @@
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.2",
     "ts-shader-loader": "^2.0.1",
-    "typedoc": "^0.25.7",
+    "typedoc": "^0.25.13",
     "typescript": "^5.0.0",
     "url-loader": "^4.1.1",
     "webpack": "^5.76.0",
@@ -59,7 +59,10 @@
     "url": "https://babylonpress.org/"
   },
   "contributors": [
-    {"name":"androdlang","url":"https://github.com/androdlang/Extensions/tree/master/ClonerSystem"}
+    {
+      "name": "androdlang",
+      "url": "https://github.com/androdlang/Extensions/tree/master/ClonerSystem"
+    }
   ],
   "license": "Apache-2.0",
   "bugs": {

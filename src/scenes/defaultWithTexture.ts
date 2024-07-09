@@ -2,11 +2,10 @@ import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { CreateSceneClass } from "../createScene";
 
 // If you don't need the standard material you will still need to import it since the scene requires it.
-// import "@babylonjs/core/Materials/standardMaterial";
+import "@babylonjs/core/Materials/standardMaterial";
 import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 
 import grassTextureUrl from "../../assets/grass.jpg";
@@ -42,7 +41,6 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
             import("@babylonjs/core/Debug/debugLayer"),
             import("@babylonjs/inspector"),
         ]).then((_values) => {
-            console.log(_values);
             scene.debugLayer.show({
                 handleResize: true,
                 overlay: true,
@@ -50,7 +48,6 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
             });
         });
 
-        // This creates and positions a free camera (non-mesh)
         const camera = new ArcRotateCamera(
             "my first camera",
             0,
@@ -60,10 +57,7 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
             scene
         );
 
-        // This targets the camera to scene origin
         camera.setTarget(Vector3.Zero());
-
-        // This attaches the camera to the canvas
         camera.attachControl(canvas, true);
 
         const light = new DirectionalLight(
@@ -115,21 +109,16 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
         const ico = MeshBuilder.CreateIcoSphere("ico", { radius: 120 });
 
         const ico2 = MeshBuilder.CreateIcoSphere("ico2", { radius: 1 });
+        ico2.material = pbrGreen;
 
         const tetra = MeshBuilder.CreatePolyhedron("tetra", { type: 2 });
         tetra.material = new PBRMaterial("tetraMat");
         (tetra.material as PBRMaterial).roughness = 0.3;
         (tetra.material as PBRMaterial).albedoColor = Color3.Purple();
 
-        ico2.material = pbrGreen;
-
         box.material = pbr;
         sphere.material = pbrRed;
 
-        /*
-        const torusKnot = MeshBuilder.CreateTorusKnot("tknot");
-        torusKnot.material = pbrBlue;
-*/
         const torus = MeshBuilder.CreateTorus("torus");
         torus.material = pbrBlue;
 
@@ -142,7 +131,8 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
             }
         );
 
-        //  mc.toThin();
+        // Uncomment to see the difference
+        //    mc.toThin(true, "mcThin");
 
         const lc = new LinearCloner(
             [sphere, box, ico2, torus, cylinder, tetra],
@@ -159,7 +149,7 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
             }
         );
 
-        console.log(lc);
+        //    console.log(lc);
 
         const lc2 = new LinearCloner(
             [cylinder, ico2, box, sphere, torus, tetra],
@@ -193,8 +183,6 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
 
         //     lc.toThin();
 
-        //    Animation.CreateAndStartAnimation("ani", lc, "growth", 30, 120, 0, 10);
-
         const rc = new RadialCloner(
             [box, sphere, ico2, torus, cylinder, tetra],
             scene,
@@ -205,10 +193,9 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
             }
         );
 
-        //
+        // Example of toMatrix() method
+        //  console.log(rc.toMatrix());
 
-        console.log(rc._rootNode);
-        //
         const rc2 = new RadialCloner(
             [box, sphere, ico2, torus, cylinder, tetra],
             scene,
@@ -219,9 +206,6 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
             }
         );
 
-        //
-
-        //     rc.toThin(true, "RadCloner");
         const radstart = Animation.CreateAndStartAnimation(
             "radanimation",
             rc,
@@ -232,10 +216,10 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
             90,
             0,
             undefined,
-            ggg(rc)!
+            radNext(rc)!
         );
 
-        function ggg(c: any) {
+        function radNext(c: any) {
             Animation.CreateAndStartAnimation(
                 "radanimation",
                 c,
@@ -245,11 +229,11 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
                 90,
                 0,
                 undefined,
-                bbb(c.root)!
+                radEnd(c.root)!
             );
         }
 
-        function bbb(c: any) {
+        function radEnd(c: any) {
             Animation.CreateAndStartAnimation(
                 "rotationX",
                 c,
@@ -258,14 +242,11 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
                 120,
                 0,
                 Math.PI,
-
                 undefined
             );
         }
 
-        //       ggg(mc);
-
-        function gggLC(c: any) {
+        function lcAnimation(c: any) {
             Animation.CreateAndStartAnimation(
                 "radanimation",
                 c,
@@ -279,9 +260,9 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
             );
         }
 
-        gggLC(lc);
-        gggLC(lc2);
-        gggLC(lc3);
+        lcAnimation(lc);
+        lcAnimation(lc2);
+        lcAnimation(lc3);
         //   console.log(mc);
 
         const oc = new ObjectCloner(
@@ -293,34 +274,23 @@ export class DefaultSceneWithTexture implements CreateSceneClass {
             }
         );
 
-        //     oc.toThin();
-        // ggg(oc);
-
+        // Adding the Effector
         const reff = new RandomEffector();
 
-        reff.scale = { x: 0, y: 2, z: 0 };
+        reff.position = { x: 0, y: 10, z: 10 };
 
-        //     rc.addEffector(reff, 1);
+        //    rc.addEffector(reff, 1);
 
         //    mc.addEffector(reff, 1);
 
-        //     oc.addEffector(reff, 1);
+        //    oc.addEffector(reff, 1);
 
-        //      lc.addEffector(reff, 1);
+        //    lc.addEffector(reff, 1);
 
         reff.strength = 0.5;
         reff.updateClients();
+        rc2.addEffector(reff, 1);
 
-        //
-        /*
-        rc.toThinOriginals();
-        mc.toThinOriginals();
-        lc.toThinOriginals();
-        oc.toThinOriginals();
-        lc2.toThinOriginals();
-        lc3.toThinOriginals();
-*/
-        //
         //
 
         return scene;

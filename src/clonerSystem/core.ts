@@ -205,7 +205,7 @@ export class Cloner {
 
     /**
      * Converts all Cloner meshes to thin instances from the original meshes, then deletes this Cloner and returns an array of Cloner meshes.
-     * Be aware that instances of those original meshes become disabled, so if they are used in other Cloners one may want to use toThin() method instead.
+     * Be aware that instances of all those original meshes become disabled as well, so if they are used in other Cloners one may want to use toThin() method instead.
      * If you don't need animations and so on you may convert Cloner to thin instances. It greatly reduces the number of objects iterating in the render loop.
      * @param addSelf If true, adds the source mesh to the matrix. Default false.
      * @returns The array of original meshes: Mesh[]
@@ -238,6 +238,26 @@ export class Cloner {
 
         console.log(this._mesh);
         return this._mesh;
+    }
+    /**
+     * Returns an array of matrices (scaling, rotation, position) of the Cloner meshes.
+     **/
+    toMatrix(): Matrix[] {
+        const matrixArray: Matrix[] = [];
+        let scale, rot, pos;
+
+        this._clones.forEach((c, index) => {
+            const inst = c.getChildren()[0] as InstancedMesh;
+
+            pos = c.position;
+            rot = Quaternion.FromEulerVector(inst.rotation);
+            scale = inst.scaling;
+            const matrix = Matrix.Compose(scale, rot, pos);
+            matrixArray.push(matrix);
+        });
+        console.log(matrixArray);
+        //
+        return matrixArray;
     }
 }
 

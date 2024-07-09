@@ -1,3 +1,4 @@
+import { AbstractEngine } from "@babylonjs/core/Engines/abstractEngine";
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { WebGPUEngine } from "@babylonjs/core/Engines/webgpuEngine";
 import { getSceneModule } from "./createScene";
@@ -12,10 +13,13 @@ export const babylonInit = async (): Promise<void> => {
     // Get the canvas element
     const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
     // Generate the BABYLON 3D engine
-    let engine: Engine;
+    let engine: AbstractEngine;
     if (engineType === "webgpu") {
         const webGPUSupported = await WebGPUEngine.IsSupportedAsync;
+        console.log("webGPUSupported ", webGPUSupported);
         if (webGPUSupported) {
+            // You can decide which WebGPU extensions to load when creating the engine. I am loading all of them
+            await import("@babylonjs/core/Engines/WebGPU/Extensions/");
             const webgpu = (engine = new WebGPUEngine(canvas, {
                 adaptToDeviceRatio: true,
                 antialias: true,
@@ -29,8 +33,9 @@ export const babylonInit = async (): Promise<void> => {
         engine = new Engine(canvas, true);
     }
 
+    console.log(engine);
     // Create the scene
-    const scene = await createSceneModule.createScene(engine, canvas);
+    const scene = await createSceneModule.createScene(engine as any, canvas);
 
     // JUST FOR TESTING. Not needed for anything else
     (window as any).scene = scene;

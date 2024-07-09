@@ -8,24 +8,21 @@ const scenes: {
 }[] = [
     {
         name: "Default",
-        url: "/",
+        url: "/?scene=defaultWithTexture",
     },
-    /*
     {
         name: "Fresnel Shader",
         url: "/?scene=fresnelShader",
     },
-   
     {
-      name: 'Load model and env',
-      url: '/?scene=loadModelAndEnv',
+        name: "Load model and env",
+        url: "/?scene=loadModelAndEnv",
     },
     {
-      name: 'Navigation mesh recast',
-      url: '/?scene=navigationMeshRecast',
-      waitForNetworkIdle: true,
+        name: "Navigation mesh recast",
+        url: "/?scene=navigationMeshRecast",
+        waitForNetworkIdle: true,
     },
-    */
     // {
     //   name: 'Physics (ammo)',
     //   url: '/?scene=physicsWithAmmo',
@@ -72,7 +69,7 @@ for (const scene of scenes) {
             await expect(page).toHaveScreenshot({
                 timeout: 0,
             });
-            expect(testInfo.stderr).toHaveLength(0);
+            expect(testInfo.errors).toHaveLength(0);
         });
     }
 }
