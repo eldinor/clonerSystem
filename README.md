@@ -73,3 +73,8 @@ The `./src/scenes` directory contains one example of the scene that can be loade
 ## WebGPU Support
 
 Open the URL in a webgpu-enabled browser and add "?engine=webgpu" to the URL. `http://localhost:8080/?engine=webgpu`.
+
+## TypeDoc Support
+
+To generate documentation use <pre>npx typedoc --out docs src/clonersystem/index.ts</pre>.
+You'll find it in the <pre>docs</pre> folder.
