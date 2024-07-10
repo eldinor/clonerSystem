@@ -1,8 +1,6 @@
-# clonerSystem
+# Cloner System for Babylon.js
 
-## Cloner System for Babylon.js
-
-Based on Cloner System extension https://github.com/BabylonJS/Extensions/tree/master/ClonerSystem by https://github.com/androdlang
+Based on Cloner System extension https://github.com/androdlang/Extensions/tree/master/ClonerSystem by https://github.com/androdlang
 
 More info and docs here - https://doc.babylonjs.com/communityExtensions/clonerSystem
 
@@ -24,13 +22,24 @@ Definitions:
 		ObjectCloner: distribution over faces of a mesh where following parameters are recognized: input-meshlist, reference-mesh.
 	</li>
 	<li>
-		RandomEffector: influences Scale/Position/Rotation of a clone with repeatable random values, controlled with an overall "strength" parameter. Not quite finished, but basically working.
+		RandomEffector: influences Scale/Position/Rotation of a clone with repeatable random values, controlled with an overall "strength" parameter.
 	</li>
 </ul>
 
 ## Demo
 
-The demo with all cloners (static) - https://babylonpress.org/cloner/
+The demo with all cloners (animated) - https://clonersystem.babylonpress.org/ (the default example scene for this repo)<br>
+The demo with all cloners (static) - https://babylonpress.org/cloner/<br>
+Extensive old version documentation - https://doc.babylonjs.com/communityExtensions/clonerSystem
+
+### Playground demos
+
+https://playground.babylonjs.com/#1MYQ3T#47<br>
+https://playground.babylonjs.com/#1WRUHY#2<br>
+https://www.babylonjs-playground.com/#1NYYEQ#5<br>
+https://www.babylonjs-playground.com/#1NYYEQ#6<br>
+https://www.babylonjs-playground.com/#1NYYEQ#7<br>
+https://playground.babylonjs.com/#JWETXJ#0<br>
 
 ## Import and Usage
 
@@ -73,8 +82,8 @@ The `./src/scenes` directory contains one example of the scene that can be loade
 ## WebGPU Support
 
 Open the URL in a webgpu-enabled browser and add "?engine=webgpu" to the URL. `http://localhost:8080/?engine=webgpu`.
+Example: https://clonersystem.babylonpress.org/?engine=webgpu
 
 ## TypeDoc Support
 
-To generate documentation use <pre>npx typedoc --out docs src/clonersystem/index.ts</pre>.
-You'll find it in the <pre>docs</pre> folder.
+To generate documentation use <pre>npx typedoc --out docs src/clonersystem/index.ts</pre>

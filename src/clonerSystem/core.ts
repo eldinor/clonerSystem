@@ -199,7 +199,7 @@ export class Cloner {
 
         this.delete();
 
-        console.log(clonedMeshArray);
+        //   console.log(clonedMeshArray);
         return clonedMeshArray;
     }
 
@@ -236,7 +236,7 @@ export class Cloner {
 
         this.delete();
 
-        console.log(this._mesh);
+        //  console.log(this._mesh);
         return this._mesh;
     }
     /**
@@ -255,7 +255,7 @@ export class Cloner {
             const matrix = Matrix.Compose(scale, rot, pos);
             matrixArray.push(matrix);
         });
-        console.log(matrixArray);
+        //   console.log(matrixArray);
         //
         return matrixArray;
     }

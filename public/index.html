@@ -1,31 +1,54 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
+    <head>
+        <meta charset="utf-8" />
 
-  <title>Cloner System for Babylon.js</title>
-  <meta name="description" content="A Cloner System based on Babylon.js, written in typescript, built with webpack">
-  <meta name="author" content="Andrei Stepanov">
-    <style>
-      html,
-      body {
-        overflow: hidden;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
+        <title>Cloner System for Babylon.js</title>
+        <meta
+            name="description"
+            content="A Cloner System based on Babylon.js, written in typescript, built with webpack"
+        />
+        <meta name="author" content="Andrei Stepanov" />
+        <style>
+                html,
+                body {
+                  overflow: hidden;
+                  width: 100%;
+                  height: 100%;
+                  margin: 0;
+                  padding: 0;
+                }
 
-      #renderCanvas {
-        width: 100%;
-        height: 100%;
-        touch-action: none;
-      }
-    </style>
-  </head>
+                #renderCanvas {
+                  width: 100%;
+                  height: 100%;
+                  touch-action: none;
+                }
+                #top{
+                  position: fixed;
+            left: 50%;
+            top: 20px;
+            transform: translate(-50%, -50%);
+            margin: 0 auto;
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+           
+                }
+                #top a {
+                  color:white;
+                  text-decoration: none;
+                }
+                #top a:hover {
+                  color:coral;
+                }
+        </style>
+    </head>
 
-  <body>
-    <canvas id="renderCanvas" touch-action="none"></canvas>
-  </body>
-
+    <body>
+        <div id="top">
+            <a href="https://clonersystem.babylonpress.org/docs/"
+                >Documentation</a
+            >
+        </div>
+        <canvas id="renderCanvas" touch-action="none"></canvas>
+    </body>
 </html>
