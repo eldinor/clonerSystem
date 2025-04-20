@@ -5,7 +5,7 @@
 To install use `npm i bp-cloner`
 
 ____________________________________________________________________________
-### Old version below!
+### (Old version)
 
 ## Cloner System for Babylon.js
 
