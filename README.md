@@ -1,4 +1,13 @@
-# Cloner System for Babylon.js
+# The main repo is moved to https://github.com/eldinor/bp-cloner
+
+### Now there is NPM Package: https://www.npmjs.com/package/bp-cloner
+
+To install use `npm i bp-cloner`
+
+____________________________________________________________________________
+### Old version below!
+
+## Cloner System for Babylon.js
 
 Based on Cloner System extension https://github.com/androdlang/Extensions/tree/master/ClonerSystem by https://github.com/androdlang
 
